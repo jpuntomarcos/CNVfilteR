@@ -1,0 +1,90 @@
+---
+title: "CNVfilteR: Remove false positives of any CNV calling tool by using SNVs calls "
+author: "Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> "
+date: "`r doc_date()`"
+package: "`r pkg_ver('CNVfilteR')`"
+output: 
+  BiocStyle::html_document:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{CNVfilteR vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
+---
+
+```{r, include=FALSE}
+library(knitr)
+opts_chunk$set(concordance=FALSE)
+knitr::opts_chunk$set(fig.width = 18)
+knitr::opts_chunk$set(fig.height = 12)
+set.seed(21666641)
+```
+
+
+# Introduction
+
+Data visualisation is a powerful tool used for data analysis and exploration in 
+many fields. Genomics data analysis is one of these fields where good 
+visualisation tools can be of great help. 
+The aim of `r BiocStyle::Biocpkg("CopyNumberPlots")` is to offer the user an 
+easy way to create copy-number related plots using the infrastructure provided
+by the R package `r BiocStyle::Biocpkg("karyoploteR")`.
+
+In addition to a set of specialized plotting functions for copy-number analysis
+data and results (`plotBAF`, `plotCopyNumberCalls`, ...), 
+`r BiocStyle::Biocpkg("CopyNumberPlots")` contains a number of data loading 
+functions to help parsing and loading the results of widely used 
+copy-number calling software such as `r BiocStyle::Biocpkg("DNAcopy")`, 
+[DECoN](https://wellcomeopenresearch.org/articles/1-20/v1) or
+[CNVkit](https://cnvkit.readthedocs.io/en/stable/).
+
+Finally, since `r BiocStyle::Biocpkg("CopyNumberPlots")` extends the 
+functionality of `r BiocStyle::Biocpkg("karyoploteR")`, it is possible 
+to combine the plotting functions of both packages to get the perfect
+figure for your data.
+
+
+# Installation
+
+`r BiocStyle::Biocpkg("CNVfilteR")` is a 
+[Bioconductor](http://bioconductor.org) package and to install it we have
+to use `r BiocStyle::Biocpkg("BiocManager")`.
+
+```{r getPackage, eval=FALSE}
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+      install.packages("BiocManager")
+  BiocManager::install("CNVfilteR")
+```
+
+
+# Quick Start
+To start working with `r BiocStyle::Biocpkg("CopyNumberPlots")` we will need
+to use the `plotKaryoptype` function from `r BiocStyle::Biocpkg("karyoploteR")`.
+If you want more information on how to customize it, use for other organisms
+or genome version, etc... you can take a look at the
+[karyoploteR tutorial](https://bernatgel.github.io/karyoploter_tutorial/) and 
+specifically at the section on 
+[how to plot ideograms](https://bernatgel.github.io/karyoploter_tutorial//Tutorial/CreateIdeogram/CreateIdeogram.html).
+For this quick start example we'll plot SNP-array data simulating a cancer 
+genome. The data is in a file included with the package. You can use almost
+any table-like file format, including the Final Report file you would get from
+Illumina's Genome Studio. In this case, to keep the example small, we have 
+data only for chomosome 1.
+To load the data we'll use `loadSNPData` which will detect the right columns, 
+read the data and build a GRanges object for us. 
+If data uses Ensembl-style chromosome names (1,2,3,...,X,Y) instead of 
+default karyoploteR UCSC chromosome names (chr1,chr2,chr3,...,chrX,chrY)
+we could change the chromosome style to UCSC with the function `UCSCStyle`.
+```{r}
+  library(CopyNumberPlots)
+  s1.file <- system.file("extdata", "S1.rawdata.txt", package = "CopyNumberPlots", mustWork = TRUE)
+  s1 <- loadSNPData(s1.file)
+  s1
+```
+
+
+
+# Session Info
+```{r}
+  sessionInfo()
+```
