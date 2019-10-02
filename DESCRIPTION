@@ -20,11 +20,9 @@ Imports:
   CopyNumberPlots,
   graphics,
   utils,
-  stringr,
   VariantAnnotation,
   Rsamtools,
   GenomeInfoDb,
-  sjmisc,
   Biostrings
 Suggest:
   BSgenome.Hsapiens.UCSC.hg19,
