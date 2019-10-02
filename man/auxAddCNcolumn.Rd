@@ -7,13 +7,13 @@
 auxAddCNcolumn(cnvs.gr)
 }
 \arguments{
-\item{cnvs.gr}{\code{data.frame} containing the column 'cnv' with "deletion" or "duplication" as values}
+\item{cnvs.gr}{\code{data.frame or GRanges} containing the column 'cnv' with "deletion" or "duplication" as values}
 }
 \value{
 input \code{cnvs.gr} with the new column 'cn'
 }
 \description{
-Adds a 'cn' column to the \code{cnvs.gr} data frame.
+Adds a 'cn' column to the \code{cnvs.gr} data.frame or GRanges.
 }
 \details{
 For each row, \code{cn} column is filled with 1 if \code{cnv} is "deletion", 3 if \code{cnv} is "duplication"
