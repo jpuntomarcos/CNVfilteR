@@ -1,6 +1,6 @@
 Package: CNVfilteR
 Type: Package
-  Title: Removes false positives of CNV calling tools by using SNV calls
+Title: Removes false positives of CNV calling tools by using SNV calls
 Version: 1.0.0
 Author: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> 
 Maintainer: The package maintainer <jmoreno@igtp.cat>
@@ -15,4 +15,5 @@ Suggest:
   BSgenome.Hsapiens.UCSC.hg19.masked,
   knitr
 biocViews: CopyNumberVariation, Sequencing, DNASeq, Visualization, DataImport
+VignetteBuilder: knitr
   
