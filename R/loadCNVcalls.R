@@ -33,7 +33,7 @@
 #'
 #'
 #' @import assertthat
-#' @importFrom stringr str_split_fixed
+# #' @importFrom stringr str_split_fixed
 #' @importFrom regioneR toGRanges
 #' @importFrom utils read.csv
 #'
@@ -68,7 +68,8 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
     colnames(cnvs.df)[which(names(cnvs.df) == start.column)] <- "start"
     colnames(cnvs.df)[which(names(cnvs.df) == end.column)] <- "end"
   } else {
-    parts <- str_split_fixed(cnvs.df$coordinates, ":|-", 3)
+    #parts <- str_split_fixed(cnvs.df$coordinates, ":|-", 3)
+    parts <- do.call(rbind, strsplit(cnvs.df$coordinates, ":|-"))
     cnvs.df$chr <- parts[,1]
     cnvs.df$start <- parts[,2]
     cnvs.df$end <- parts[,3]
@@ -76,7 +77,7 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
 
 
   # depending on gene.column provided or not...
-  if (is.string(gene.column)){
+  if (assertthat::is.string(gene.column)){
     colnames(cnvs.df)[which(names(cnvs.df) == gene.column)] <- "gene"
     CNV_DF_COLUMNS <- c(CNV_DF_COLUMNS, "gene")
   }
