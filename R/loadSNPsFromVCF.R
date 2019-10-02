@@ -35,7 +35,6 @@
 #' @import assertthat
 #' @import VariantAnnotation
 #' @importFrom GenomeInfoDb seqlevelsStyle
-#' @importFrom sjmisc str_contains
 #' @importFrom regioneR toGRanges
 #' @importFrom Rsamtools TabixFile headerTabix
 #' @importFrom IRanges subsetByOverlaps reduce
@@ -90,9 +89,9 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     availableSeqs <- headerTabix(vcf.file)$seqnames
 
     # Convert regions.to.filter to Ensembl / UCSC chr style if necessary
-    if (str_contains(seqlevels(regions.to.filter), "chr") & !str_contains(availableSeqs, "chr")){
+    if (grepl("chr", seqlevels(regions.to.filter)) & !grepl("chr", availableSeqs)){
       GenomeInfoDb::seqlevelsStyle(regions.to.filter) <- "Ensembl"
-    } else if (!str_contains(seqlevels(regions.to.filter), "chr") & str_contains(availableSeqs, "chr")){
+    } else if (!grepl("chr", seqlevels(regions.to.filter)) & grepl("chr", availableSeqs)){
       GenomeInfoDb::seqlevelsStyle(regions.to.filter) <- "UCSC"
     }
 
