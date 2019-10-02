@@ -15,33 +15,28 @@ vignette: >
 ```{r, include=FALSE}
 library(knitr)
 opts_chunk$set(concordance=FALSE)
-knitr::opts_chunk$set(fig.width = 18)
-knitr::opts_chunk$set(fig.height = 12)
+knitr::opts_chunk$set(fig.width = 7)
+knitr::opts_chunk$set(fig.height = 7)
 set.seed(21666641)
 ```
 
 
 # Introduction
 
-Data visualisation is a powerful tool used for data analysis and exploration in 
-many fields. Genomics data analysis is one of these fields where good 
-visualisation tools can be of great help. 
-The aim of `r BiocStyle::Biocpkg("CopyNumberPlots")` is to offer the user an 
-easy way to create copy-number related plots using the infrastructure provided
-by the R package `r BiocStyle::Biocpkg("karyoploteR")`.
+Many tools for copy number variant (CNV) detection from NGS data have been 
+developed. Usually, these tools were designed for different input data like WGS, WES or
+panel data, and their performance may depend on the CNV size. Available
+benchmarks show that all these tools obtain false positives, sometimes 
+reaching a very high number of them.
 
-In addition to a set of specialized plotting functions for copy-number analysis
-data and results (`plotBAF`, `plotCopyNumberCalls`, ...), 
-`r BiocStyle::Biocpkg("CopyNumberPlots")` contains a number of data loading 
-functions to help parsing and loading the results of widely used 
-copy-number calling software such as `r BiocStyle::Biocpkg("DNAcopy")`, 
-[DECoN](https://wellcomeopenresearch.org/articles/1-20/v1) or
-[CNVkit](https://cnvkit.readthedocs.io/en/stable/).
+With the aim of reducing the number of false positives,
+`r BiocStyle::Biocpkg("CNVfilteR")` identifies those CNVs that can be discarded.
+This task is performed by using the single nucleotide variant (SNV) calls that are usually 
+obtained in common NGS pipelines. As VCF field interpretation is key when working
+with these files, `r BiocStyle::Biocpkg("CNVfilteR")` specifically supports 
+VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller, and
+UnifiedGenotyper.
 
-Finally, since `r BiocStyle::Biocpkg("CopyNumberPlots")` extends the 
-functionality of `r BiocStyle::Biocpkg("karyoploteR")`, it is possible 
-to combine the plotting functions of both packages to get the perfect
-figure for your data.
 
 
 # Installation
@@ -57,30 +52,68 @@ to use `r BiocStyle::Biocpkg("BiocManager")`.
 ```
 
 
-# Quick Start
-To start working with `r BiocStyle::Biocpkg("CopyNumberPlots")` we will need
-to use the `plotKaryoptype` function from `r BiocStyle::Biocpkg("karyoploteR")`.
-If you want more information on how to customize it, use for other organisms
-or genome version, etc... you can take a look at the
-[karyoploteR tutorial](https://bernatgel.github.io/karyoploter_tutorial/) and 
-specifically at the section on 
-[how to plot ideograms](https://bernatgel.github.io/karyoploter_tutorial//Tutorial/CreateIdeogram/CreateIdeogram.html).
-For this quick start example we'll plot SNP-array data simulating a cancer 
-genome. The data is in a file included with the package. You can use almost
-any table-like file format, including the Final Report file you would get from
-Illumina's Genome Studio. In this case, to keep the example small, we have 
-data only for chomosome 1.
-To load the data we'll use `loadSNPData` which will detect the right columns, 
-read the data and build a GRanges object for us. 
-If data uses Ensembl-style chromosome names (1,2,3,...,X,Y) instead of 
-default karyoploteR UCSC chromosome names (chr1,chr2,chr3,...,chrX,chrY)
-we could change the chromosome style to UCSC with the function `UCSCStyle`.
-```{r}
-  library(CopyNumberPlots)
-  s1.file <- system.file("extdata", "S1.rawdata.txt", package = "CopyNumberPlots", mustWork = TRUE)
-  s1 <- loadSNPData(s1.file)
-  s1
+We can also install the package from github to get the latest **devel version**,
+but beware that it **might be incompatible with the release version of 
+Bioconductor**.
+
+```` {r, eval = FALSE}
+  BiocManager::install("jpuntomarcos/CNVfilteR")
 ```
+
+
+# Quick Start
+
+Below we show a full example that covers from data loading to results plotting.
+First, we load some CNV tool results:
+```{r message=FALSE}
+library(CNVfilteR)
+
+cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
+cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample", genome = "hg19")
+
+```
+
+Then, we load the SNVs stored in a couple of VCF files. 
+```{r }
+vcf.paths <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+               system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
+vcfs <- loadVCFs(vcf.paths, cnvs.gr = cnvs.gr)
+```
+We observe that the function recognized VarScan2 as the source, so fields
+were selected and allele frequency consequently. Now we can call 
+`filterCNVs()` to identify those CNVs that can be discarded.
+
+```{r message=FALSE }
+results <- filterCNVs(cnvs.gr, vcfs)
+results
+```
+
+And we can check those CNVs that can be filtered out:
+
+```{r}
+as.data.frame(results$cnvs[results$cnvs$filter == TRUE])
+```
+
+As an example, we can observe that the CNV with id=3 has 4 variants matching 
+it: 2 in favor of discarding it, two against discarding it. If we want to know
+more about the variants matching a certain CNV we can do:
+```{r}
+results$variantsForEachCNV[["3"]]
+```
+
+Two variants are close to the default expected heterozygous frequency,
+0.5, so they obtain a positive score. The other two variants are not 
+so clearly close to the default expected duplication value, 0.33, so
+they obtain a low negative score. All these default values and others can
+be modified in the `filterCNVs()` function.
+
+Finally, we may be interested in plotting the results. For example, we can
+plot easily the CNV with id=3 and all the variants matching it.
+
+```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
+plotVariantsForCNV(results, "3")
+```
+
 
 
 
