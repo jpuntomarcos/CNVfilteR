@@ -4,10 +4,21 @@
 #' Loads VCFs files
 #'
 #' @details
-#' Loads VCF files using the \code{loadSNPsFromVCF} function to recognize the correct format.
+#' Loads VCF files and computes alt allele frequency for each variant. It uses
+#' \code{\link{loadSNPsFromVCF}} function load the data and identify the 
+#' correct VCF format for allele frequency computation. 
+#' 
+#' If sample.names is not provided, the sample names included in the VCF itself 
+#' will be used. Both single-sample and multi-sample VCFs are accepted, but when
+#' multi-sample VCFs are used, sample.names parameter must be NULL.
 #'
-#' If vcf is not compressed with bgzip, the function compress it and generates the .gz file.
-#' If .tbi file not exists for a given VCF file, the function also generates it.
+#' If vcf is not compressed with bgzip, the function compresses it and generates
+#' the .gz file. If .tbi file does not exist for a given VCF file, the function 
+#' also generates it. All files are generated in a temporary folder.
+#' 
+#' @note **Important:** Compressed VCF must be compressed with 
+#' [bgzip ("block gzip") from Samtools htslib](http://www.htslib.org/doc/bgzip.html)
+#' and not using the standard Gzip utility.
 #'
 #' @param vcf.paths vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.
 #' @param sample.names Sample names vector containing sample names for each \code{vcf.paths}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)
