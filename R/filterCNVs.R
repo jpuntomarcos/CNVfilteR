@@ -61,7 +61,7 @@
 #'
 filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mean1 = 33, expected.dup.ht.mean2 = 66,
                        sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 39, 44, 56, 60, 72),
-                       dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = TRUE) {
+                       dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = FALSE) {
 
   # Check input
   # assert_that(is.data.frame(cnvs.df))
