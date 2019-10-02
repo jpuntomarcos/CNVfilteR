@@ -23,7 +23,8 @@ Imports:
   VariantAnnotation,
   Rsamtools,
   GenomeInfoDb,
-  Biostrings
+  Biostrings,
+  knitr
 Suggest:
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg19.masked,
