@@ -3,7 +3,7 @@ Type: Package
 Title: Removes false positives of CNV calling tools by using SNV calls
 Version: 0.99.0
 Author: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> 
-Maintainer: Jose Marcos Moreno <jmoreno@igtp.cat>
+Maintainer: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat>
 Description: CNVfilteR filters the ouput of CNV calling tools: the package tags those CNVs than can be discarded after observing the SNVs that give evidence to discard them.
 License: Artistic-2.0
 Encoding: UTF-8
