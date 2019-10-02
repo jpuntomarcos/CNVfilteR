@@ -13,7 +13,6 @@ Imports:
   IRanges,
   GenomicRanges,
   SummarizedExperiment,
-  dplyr,
   pracma,
   regioneR,
   assertthat,
