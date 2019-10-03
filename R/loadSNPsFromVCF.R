@@ -89,9 +89,9 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     availableSeqs <- headerTabix(vcf.file)$seqnames
 
     # Convert regions.to.filter to Ensembl / UCSC chr style if necessary
-    if (grepl("chr", seqlevels(regions.to.filter)) & !grepl("chr", availableSeqs)){
+    if (all(grepl("chr", seqlevels(regions.to.filter))) & all(!grepl("chr", availableSeqs))){
       GenomeInfoDb::seqlevelsStyle(regions.to.filter) <- "Ensembl"
-    } else if (!grepl("chr", seqlevels(regions.to.filter)) & grepl("chr", availableSeqs)){
+    } else if (all(!grepl("chr", seqlevels(regions.to.filter))) & all(grepl("chr", availableSeqs))){
       GenomeInfoDb::seqlevelsStyle(regions.to.filter) <- "UCSC"
     }
 
