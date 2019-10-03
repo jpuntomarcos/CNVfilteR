@@ -1,10 +1,10 @@
 #' filterCNVs
 #'
 #' @description
-#' Tags those copy number calls that can be filtered
+#' Identifies those copy number calls that can be filtered
 #'
 #' @details
-#' Checks all the variants (SNV/indel) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
+#' Checks all the variants (SNV and optionally INDELs) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
 #' It returs a S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
 #'
 #' A CNV deletion can be filtered if there is at least \code{ht.deletions.threshold}% of heterozygous variants matching the CNV.
@@ -61,7 +61,7 @@
 #'
 filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mean1 = 33, expected.dup.ht.mean2 = 66,
                        sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 39, 44, 56, 60, 72),
-                       dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = TRUE) {
+                       dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = FALSE) {
 
   # Check input
   # assert_that(is.data.frame(cnvs.df))
@@ -103,7 +103,7 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
       if (cnvs.gr[i]$cnv == "deletion" && nHT > 0 && (nHT / (nHT + nHM) > (ht.deletions.threshold / 100.0) )) {
         cnvs.gr[i]$filter <- TRUE
         if (verbose){
-          print(paste0("Discarded CNV deletion at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample))
+          message(paste0("Discarded CNV deletion at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample))
         }
         cnvs.gr[i]$nInFavor <- nHT
       }
@@ -158,13 +158,13 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
         if (total.score >= dup.threshold.score){
           cnvs.gr[i]$filter <- TRUE
           if (verbose){
-            print(paste0("Discarded CNV duplication at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample,  ", score: ", round(total.score, 4)))
-            print(matchingVariants)
+            message(paste0("Discarded CNV duplication at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample,  ", score: ", round(total.score, 4)))
+            message(matchingVariants)
           }
         } else {
           if (verbose){
-            print(paste0("CNV duplication NOT discarded at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample, ", score: ", round(total.score, 4)))
-            print(matchingVariants)
+            message(paste0("CNV duplication NOT discarded at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample, ", score: ", round(total.score, 4)))
+            message(matchingVariants)
           }
         }
 
@@ -184,12 +184,12 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   # Calculate % of CNVs to be filtered
   nFiltered <- length(cnvs.gr[cnvs.gr$filter == TRUE,])
   pct <- round(nFiltered/nCNVs*100, 2)
-  print(paste0(nFiltered, " of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
+  message(paste0(nFiltered, " of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
 
   # Calculate % with matching variants to be filtered
   nCNVsWithMatchingVariants <- length(cnvs.gr[cnvs.gr$nVariants > 0 ,])
   pct <- round(nFiltered/nCNVsWithMatchingVariants*100, 2)
-  print(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
+  message(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
 
   # Create S3 object and return
   filterParameters <- list(expected.ht.mean = expected.ht.mean, expected.dup.ht.mean1 = expected.dup.ht.mean1,

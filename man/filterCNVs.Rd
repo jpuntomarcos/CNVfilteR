@@ -8,7 +8,7 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
   expected.dup.ht.mean1 = 33, expected.dup.ht.mean2 = 66,
   sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 39, 44, 56, 60, 72),
   dup.threshold.score = 0.5, ht.deletions.threshold = 15,
-  verbose = TRUE)
+  verbose = FALSE)
 }
 \arguments{
 \item{cnvs.gr}{\code{GRanges} containing CNVs to be filtered. Use \code{loadCNVcalls} to load them.}
@@ -44,10 +44,10 @@ A S3 object with 3 elements:
  - \code{filterParameters}: input parameters used for filtering
 }
 \description{
-Tags those copy number calls that can be filtered
+Identifies those copy number calls that can be filtered
 }
 \details{
-Checks all the variants (SNV/indel) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
+Checks all the variants (SNV and optionally INDELs) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
 It returs a S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
 
 A CNV deletion can be filtered if there is at least \code{ht.deletions.threshold}% of heterozygous variants matching the CNV.
