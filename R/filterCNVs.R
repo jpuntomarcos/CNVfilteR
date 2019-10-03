@@ -1,10 +1,10 @@
 #' filterCNVs
 #'
 #' @description
-#' Tags those copy number calls that can be filtered
+#' Identifies those copy number calls that can be filtered
 #'
 #' @details
-#' Checks all the variants (SNV/indel) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
+#' Checks all the variants (SNV and optionally INDELs) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
 #' It returs a S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
 #'
 #' A CNV deletion can be filtered if there is at least \code{ht.deletions.threshold}% of heterozygous variants matching the CNV.
