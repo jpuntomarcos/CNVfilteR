@@ -33,15 +33,14 @@
 #'
 #'
 #' @import assertthat
-# #' @importFrom stringr str_split_fixed
-#' @importFrom regioneR toGRanges
+#' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom utils read.csv
 #'
 #' @export loadCNVcalls
 #'
 loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.column = NULL, cnv.column, sample.column,
                          gene.column = NULL, deletion = "deletion", duplication = "duplication",
-                         sep = "\t", skip = 0, genome = "hg19"){
+                         sep = "\t", skip = 0, genome = "hg19", exclude.non.canonical.chrs = TRUE){
 
   # intial vars
   CNV_DF_COLUMNS <- c("chr", "start", "end", "cnv", "sample")
@@ -68,7 +67,6 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
     colnames(cnvs.df)[which(names(cnvs.df) == start.column)] <- "start"
     colnames(cnvs.df)[which(names(cnvs.df) == end.column)] <- "end"
   } else {
-    #parts <- str_split_fixed(cnvs.df$coordinates, ":|-", 3)
     parts <- do.call(rbind, strsplit(cnvs.df$coordinates, ":|-"))
     cnvs.df$chr <- parts[,1]
     cnvs.df$start <- parts[,2]
@@ -91,6 +89,12 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
 
   # Transform to GRanges
   cnvs.gr <- regioneR::toGRanges(cnvs.df, genome = genome)
+
+  # Exclude non cannonical chromosomes to avoid conflicts when comparing later with GRanges with different non canonical chromosomes
+  if (exclude.non.canonical.chrs){
+    cnvs.gr <- regioneR::filterChromosomes(cnvs.gr, organism = genome(cnvs.gr)[1])
+  }
+
 
   return(cnvs.gr)
 }

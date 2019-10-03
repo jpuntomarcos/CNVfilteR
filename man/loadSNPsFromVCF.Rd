@@ -6,7 +6,8 @@
 \usage{
 loadSNPsFromVCF(vcf.file, vcf.source = NULL, ref.support.field = NULL,
   alt.support.field = NULL, list.support.field = NULL,
-  regions.to.filter = NULL, genome = "hg19", verbose = TRUE)
+  regions.to.filter = NULL, genome = "hg19",
+  exclude.non.canonical.chrs = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{vcf.file}{VCF file path}

@@ -1,7 +1,7 @@
 Package: CNVfilteR
 Type: Package
 Title: Identifies false positives of CNV calling tools by using SNV calls
-Version: 0.99.3     
+Version: 0.99.3
 Author: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> 
 Maintainer: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat>
 Description: CNVfilteR identifies those CNVs that can be discarded by using the single nucleotide variant (SNV) calls that are usually obtained in common NGS pipelines.

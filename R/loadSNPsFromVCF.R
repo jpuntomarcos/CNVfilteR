@@ -34,8 +34,8 @@
 #'
 #' @import assertthat
 #' @import VariantAnnotation
-#' @importFrom GenomeInfoDb seqlevelsStyle
-#' @importFrom regioneR toGRanges
+#' @importFrom GenomeInfoDb seqlevelsStyle seqinfo
+#' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom Rsamtools TabixFile headerTabix
 #' @importFrom IRanges subsetByOverlaps reduce
 #' @importFrom GenomicRanges mcols seqnames
@@ -43,7 +43,8 @@
 #' @export loadSNPsFromVCF
 #'
 loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NULL, alt.support.field = NULL,
-                            list.support.field = NULL, regions.to.filter = NULL, genome = "hg19", verbose = TRUE) {
+                            list.support.field = NULL, regions.to.filter = NULL, genome = "hg19",
+                            exclude.non.canonical.chrs = TRUE, verbose = TRUE) {
 
   if (verbose) message("Scanning file ", vcf.file, "...")
 
@@ -110,6 +111,11 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   vars <- readVcf(file=TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
   if (length(vars) > 0) {
     GenomeInfoDb::seqlevelsStyle(vars) <- "UCSC"
+  }
+
+  # Exclude non cannonical chromosomes to avoid conflicts when comparing later with GRanges with different non canonical chromosomes
+  if (exclude.non.canonical.chrs){
+    vars <- regioneR::filterChromosomes(vars, organism = genome(vars)[1])
   }
 
   # process each sample
