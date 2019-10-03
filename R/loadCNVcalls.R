@@ -21,6 +21,7 @@
 #' @param sep Separator symbol to load the csv/tsv file. (Defaults to "\\t")
 #' @param skip Number of rows that shoud be skipped when reading the csv/tsv file. (Defaults to 0)
 #' @param genome The name of the genome. (Defaults to "hg19")
+#' @param exclude.non.canonical.chrs Whether to exclude non canonical chromosomes (Defaults to TRUE)
 #'
 #' @return A \code{GRanges} with a range per each CNV and the metadata columns:
 #'  - \code{cnv}: type of CNV, "duplication" or "deletion"
@@ -92,7 +93,7 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
 
   # Exclude non cannonical chromosomes to avoid conflicts when comparing later with GRanges with different non canonical chromosomes
   if (exclude.non.canonical.chrs){
-    cnvs.gr <- regioneR::filterChromosomes(cnvs.gr, organism = genome(cnvs.gr)[1])
+    cnvs.gr <- regioneR::filterChromosomes(cnvs.gr, organism = genome)
   }
 
 

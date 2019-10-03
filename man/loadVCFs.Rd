@@ -39,6 +39,8 @@ Useful for defining known difficult regions like pseudogenes where the allele fr
 
 \item{genome}{The name of the genome. (Defaults to "hg19")}
 
+\item{exclude.non.canonical.chrs}{Whether to exclude non canonical chromosomes (Defaults to TRUE)}
+
 \item{verbose}{Whether to show information messages. (Defaults to TRUE)}
 }
 \value{

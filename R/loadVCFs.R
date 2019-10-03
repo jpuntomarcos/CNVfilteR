@@ -34,6 +34,7 @@
 #' @param heterozygous.range Heterozygous range. Variants not in the homozygous/heterozygous intervals will be excluded. (Defaults to \code{c(28, 72)})
 #' @param exclude.indels Whether to exclude indels when loading the variants. TRUE is the recommended value given that indels frequency varies in a different way than SNVs. (Defaults to TRUE)
 #' @param genome The name of the genome. (Defaults to "hg19")
+#' @param exclude.non.canonical.chrs Whether to exclude non canonical chromosomes (Defaults to TRUE)
 #' @param verbose Whether to show information messages. (Defaults to TRUE)
 #'
 #' @return A list where names are the sample names, and values are the \code{GRanges} objects for each sample.

@@ -24,6 +24,8 @@ loadSNPsFromVCF(vcf.file, vcf.source = NULL, ref.support.field = NULL,
 
 \item{genome}{The name of the genome (Defaults to "hg19")}
 
+\item{exclude.non.canonical.chrs}{Whether to exclude non canonical chromosomes (Defaults to TRUE)}
+
 \item{verbose}{Whether to show information messages. (Defaults to TRUE)}
 }
 \value{

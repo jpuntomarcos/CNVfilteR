@@ -20,6 +20,7 @@
 #' @param list.support.field Allele support field in a list format: reference allele, alternative allele. (Defaults to NULL)
 #' @param regions.to.filter The regions to which limit the VCF import. It can be used to speed up the import process. (Defaults to NULL)
 #' @param genome The name of the genome (Defaults to "hg19")
+#' @param exclude.non.canonical.chrs Whether to exclude non canonical chromosomes (Defaults to TRUE)
 #' @param verbose Whether to show information messages. (Defaults to TRUE)
 #'
 #' @return A list where names are sample names, and values are \code{GRanges} objects containing the variants for each sample, including the following metadata columns:
@@ -113,11 +114,6 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     GenomeInfoDb::seqlevelsStyle(vars) <- "UCSC"
   }
 
-  # Exclude non cannonical chromosomes to avoid conflicts when comparing later with GRanges with different non canonical chromosomes
-  if (exclude.non.canonical.chrs){
-    vars <- regioneR::filterChromosomes(vars, organism = genome(vars)[1])
-  }
-
   # process each sample
   samples <- colnames(vars)
   res <- list()
@@ -165,6 +161,13 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     mdata <- data.frame(ref = ref, alt = alt, ref.support = as.vector(depths.ref), alt.support = as.vector(depths.alt),
                         alt.freq = as.vector(freqs.alt), total.depth = as.vector(total.depth))
     GenomicRanges::mcols(v) <- mdata
+
+    # Exclude non cannonical chromosomes to avoid conflicts when comparing later with GRanges with different non canonical chromosomes
+    if (exclude.non.canonical.chrs){
+      v <- regioneR::filterChromosomes(v, organism = genome)
+    }
+
+    # save variants
     res[[s]] <- v
   }
 
