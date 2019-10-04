@@ -4,7 +4,7 @@
 \alias{loadVCFs}
 \title{loadVCFs}
 \usage{
-loadVCFs(vcf.paths, sample.names = NULL, cnvs.gr, min.total.depth = 30,
+loadVCFs(vcf.files, sample.names = NULL, cnvs.gr, min.total.depth = 30,
   regions.to.exclude = NULL, vcf.source = NULL,
   ref.support.field = NULL, alt.support.field = NULL,
   list.support.field = NULL, homozygous.range = c(90, 100),
@@ -12,9 +12,9 @@ loadVCFs(vcf.paths, sample.names = NULL, cnvs.gr, min.total.depth = 30,
   genome = "hg19", exclude.non.canonical.chrs = TRUE, verbose = TRUE)
 }
 \arguments{
-\item{vcf.paths}{vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.}
+\item{vcf.files}{vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.}
 
-\item{sample.names}{Sample names vector containing sample names for each \code{vcf.paths}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)}
+\item{sample.names}{Sample names vector containing sample names for each \code{vcf.files}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)}
 
 \item{cnvs.gr}{\code{GRanges} object containg CNV calls. Call \code{loadCNVcalls} to obtain it. Only those variants in regions affected by CNVs will be loaded to speed up the load.}
 
@@ -70,12 +70,12 @@ and not using the standard Gzip utility.
 \examples{
 # Load CNVs data (required by loadVCFs to speed up the load process)
 cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
 
 # Load VCFs data
-vcf.paths <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
                system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
-vcfs <- loadVCFs(vcf.paths, cnvs.gr = cnvs.gr)
+vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 
 
 }

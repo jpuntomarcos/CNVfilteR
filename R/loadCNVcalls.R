@@ -7,7 +7,7 @@
 #' Loads a csv/tsv file containing CNV calls, and transform it into a GRanges with \code{cnv} and \code{sample} metadata columns.
 #'
 #'
-#' @param path Path to csv/tsv file containing the CNV calls.
+#' @param cnvs.file Path to csv/tsv file containing the CNV calls.
 #' @param chr.column Which column stores the chr location of the CNV.
 #' @param start.column Which column stores the start location of the CNV.
 #' @param end.column Which column stores the end location of the CNV.
@@ -30,7 +30,7 @@
 #' @examples
 #' # Load CNVs data
 #' cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-#' cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+#' cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
 #'
 #'
 #' @import assertthat
@@ -39,7 +39,7 @@
 #'
 #' @export loadCNVcalls
 #'
-loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.column = NULL, cnv.column, sample.column,
+loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.column = NULL, cnv.column, sample.column,
                          gene.column = NULL, deletion = "deletion", duplication = "duplication",
                          sep = "\t", skip = 0, genome = "hg19", exclude.non.canonical.chrs = TRUE){
 
@@ -47,7 +47,7 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
   CNV_DF_COLUMNS <- c("chr", "start", "end", "cnv", "sample")
 
   # Check input
-  assertthat::assert_that(assertthat::is.string(path))
+  assertthat::assert_that(assertthat::is.string(cnvs.file))
   assertthat::assert_that(assertthat::is.string(chr.column))
   assertthat::assert_that(assertthat::is.string(start.column))
   assertthat::assert_that(assertthat::is.string(end.column))
@@ -57,7 +57,7 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
   assertthat::assert_that(assertthat::is.string(sep))
 
   # Read data
-  cnvs.df <- utils::read.csv(path, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)
+  cnvs.df <- utils::read.csv(cnvs.file, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)
 
   # Rename and select needed columns
   colnames(cnvs.df)[which(names(cnvs.df) == cnv.column)] <- "cnv"

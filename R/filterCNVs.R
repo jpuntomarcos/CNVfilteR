@@ -39,12 +39,12 @@
 #' @examples
 #' # Load CNVs data
 #' cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-#' cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+#' cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
 #'
 #' # Load VCFs data
-#' vcf.paths <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+#' vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
 #'                system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
-#' vcfs <- loadVCFs(vcf.paths, cnvs.gr = cnvs.gr)
+#' vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 #'
 #' # Filter CNVs
 #' results <- filterCNVs(cnvs.gr, vcfs)

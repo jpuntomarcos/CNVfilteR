@@ -69,15 +69,15 @@ First, we load some CNV tool results:
 library(CNVfilteR)
 
 cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample", genome = "hg19")
+cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample", genome = "hg19")
 
 ```
 
 Then, we load the SNVs stored in a couple of VCF files. 
 ```{r }
-vcf.paths <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
                system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
-vcfs <- loadVCFs(vcf.paths, cnvs.gr = cnvs.gr)
+vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 ```
 We observe that the function recognized VarScan2 as the source, so fields
 were selected and allele frequency consequently. Now we can call 

@@ -20,8 +20,8 @@
 #' [bgzip ("block gzip") from Samtools htslib](http://www.htslib.org/doc/bgzip.html)
 #' and not using the standard Gzip utility.
 #'
-#' @param vcf.paths vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.
-#' @param sample.names Sample names vector containing sample names for each \code{vcf.paths}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)
+#' @param vcf.files vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.
+#' @param sample.names Sample names vector containing sample names for each \code{vcf.files}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)
 #' @param cnvs.gr \code{GRanges} object containg CNV calls. Call \code{loadCNVcalls} to obtain it. Only those variants in regions affected by CNVs will be loaded to speed up the load.
 #' @param min.total.depth Minimum total depth. Variants under this value will be excluded. (Defaults to 30)
 #' @param regions.to.exclude A \code{GRanges} object defining the regions for which the variants should be excluded.
@@ -42,12 +42,12 @@
 #' @examples
 #' # Load CNVs data (required by loadVCFs to speed up the load process)
 #' cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-#' cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+#' cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
 #'
 #' # Load VCFs data
-#' vcf.paths <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+#' vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
 #'                system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
-#' vcfs <- loadVCFs(vcf.paths, cnvs.gr = cnvs.gr)
+#' vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 #'
 #'
 #' @import assertthat
@@ -57,18 +57,18 @@
 #' @importFrom Rsamtools indexTabix bgzip
 #' @export loadVCFs
 #'
-loadVCFs <- function(vcf.paths, sample.names = NULL, cnvs.gr,
+loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
                      min.total.depth = 30, regions.to.exclude = NULL, vcf.source = NULL,
                      ref.support.field = NULL, alt.support.field = NULL, list.support.field = NULL,
                      homozygous.range = c(90,100), heterozygous.range = c(28,72), exclude.indels = TRUE,
                      genome = "hg19", exclude.non.canonical.chrs = TRUE, verbose = TRUE) {
 
   # Check input
-  assertthat::assert_that(is.character(vcf.paths))
+  assertthat::assert_that(is.character(vcf.files))
   assertthat::assert_that(assertthat::is.number(min.total.depth))
   assertthat::assert_that(is.numeric(homozygous.range) && length(homozygous.range) == 2)
   if (!is.null(sample.names))
-    assertthat::assert_that(length(vcf.paths) == length(sample.names))
+    assertthat::assert_that(length(vcf.files) == length(sample.names))
 
 
   # Decide where sample names are obtained from
@@ -81,7 +81,7 @@ loadVCFs <- function(vcf.paths, sample.names = NULL, cnvs.gr,
 
   # Load and filter each VCF
   results <- list()
-  for (vcfFile in vcf.paths){
+  for (vcfFile in vcf.files){
 
     originalVcfFile <- vcfFile
     if (!endsWith(vcfFile, ".gz"))

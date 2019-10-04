@@ -30,8 +30,8 @@
 #'   - \code{total.depth}: total depth
 #'
 #' @examples
-#' vcf.path <- system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE)
-#' vcf <- loadSNPsFromVCF(vcf.path)
+#' vcf.file <- system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE)
+#' vcf <- loadSNPsFromVCF(vcf.file)
 #'
 #' @import assertthat
 #' @import VariantAnnotation

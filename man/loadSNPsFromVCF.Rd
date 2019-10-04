@@ -49,7 +49,7 @@ Optionally, the fields where the data is stored can be manually set by using the
 Requirement: a TabixFile (.tbi) should exists in the same directory of the VCF file.
 }
 \examples{
-vcf.path <- system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE)
-vcf <- loadSNPsFromVCF(vcf.path)
+vcf.file <- system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE)
+vcf <- loadSNPsFromVCF(vcf.file)
 
 }

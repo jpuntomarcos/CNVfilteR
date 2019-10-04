@@ -4,13 +4,13 @@
 \alias{loadCNVcalls}
 \title{loadCNVcalls}
 \usage{
-loadCNVcalls(path, chr.column, start.column, end.column,
+loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
   coord.column = NULL, cnv.column, sample.column, gene.column = NULL,
   deletion = "deletion", duplication = "duplication", sep = "\\t",
   skip = 0, genome = "hg19", exclude.non.canonical.chrs = TRUE)
 }
 \arguments{
-\item{path}{Path to csv/tsv file containing the CNV calls.}
+\item{cnvs.file}{Path to csv/tsv file containing the CNV calls.}
 
 \item{chr.column}{Which column stores the chr location of the CNV.}
 
@@ -53,7 +53,7 @@ Loads a csv/tsv file containing CNV calls, and transform it into a GRanges with 
 \examples{
 # Load CNVs data
 cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
-cnvs.gr <- loadCNVcalls(path = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
 
 
 }
