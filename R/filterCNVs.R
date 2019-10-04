@@ -184,12 +184,16 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   # Calculate % of CNVs to be filtered
   nFiltered <- length(cnvs.gr[cnvs.gr$filter == TRUE,])
   pct <- round(nFiltered/nCNVs*100, 2)
-  message(paste0(nFiltered, " of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
+  if (verbose){
+    message(paste0(nFiltered, " of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
+  }
 
   # Calculate % with matching variants to be filtered
   nCNVsWithMatchingVariants <- length(cnvs.gr[cnvs.gr$nVariants > 0 ,])
   pct <- round(nFiltered/nCNVsWithMatchingVariants*100, 2)
-  message(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
+  if (verbose){
+    message(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
+  }
 
   # Create S3 object and return
   filterParameters <- list(expected.ht.mean = expected.ht.mean, expected.dup.ht.mean1 = expected.dup.ht.mean1,
