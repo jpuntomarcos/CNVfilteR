@@ -30,9 +30,9 @@ plotAllCNVs <- function(cnvs.gr){
   cnvs.gr <- auxAddCNcolumn(cnvs.gr)
 
   # Plot
-  kp <- plotKaryotype(plot.type=1)
-  plotCopyNumberCalls(kp, cnvs.gr, r1=0.3, cn.colors = CNV_COLORS, label.cex = 0.6)
-  legend("bottomright", legend=c("deletion", "duplication"), fill = c(CNV_COLORS[2], CNV_COLORS[4]), ncol=1, cex = 0.7)
+  kp <- karyoploteR::plotKaryotype(plot.type=1)
+  CopyNumberPlots::plotCopyNumberCalls(kp, cnvs.gr, r1=0.3, cn.colors = CNV_COLORS, label.cex = 0.6)
+  graphics::legend("bottomright", legend=c("deletion", "duplication"), fill = c(CNV_COLORS[2], CNV_COLORS[4]), ncol=1, cex = 0.7)
 
   return(invisible(kp))
 }

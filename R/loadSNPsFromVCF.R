@@ -35,10 +35,10 @@
 #'
 #' @import assertthat
 #' @import VariantAnnotation
-#' @importFrom GenomeInfoDb seqlevelsStyle seqinfo
+#' @importFrom GenomeInfoDb seqlevelsStyle
 #' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom Rsamtools TabixFile headerTabix
-#' @importFrom IRanges subsetByOverlaps reduce
+#' @importFrom IRanges reduce
 #' @importFrom GenomicRanges mcols seqnames
 #' @importFrom SummarizedExperiment rowRanges
 #' @export loadSNPsFromVCF
@@ -85,10 +85,10 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   if (!is.null(regions.to.filter)) {
 
     # reduce (join) all regions to avoid duplicated positions when using which command
-    regions.to.filter <- reduce(regions.to.filter)
+    regions.to.filter <- IRanges::reduce(regions.to.filter)
 
     # Get seqnames from vcf
-    availableSeqs <- headerTabix(vcf.file)$seqnames
+    availableSeqs <- Rsamtools::headerTabix(vcf.file)$seqnames
 
     # Convert regions.to.filter to Ensembl / UCSC chr style if necessary
     if (all(grepl("chr", seqlevels(regions.to.filter))) & all(!grepl("chr", availableSeqs))){
@@ -98,7 +98,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     }
 
     # filter regions.to.filter by available seqnames to prevent an error when calling readVcf
-    regions.to.filter <- regions.to.filter[as.character(seqnames(regions.to.filter)) %in% availableSeqs]
+    regions.to.filter <- regions.to.filter[as.character(GenomicRanges::seqnames(regions.to.filter)) %in% availableSeqs]
 
     # create ScanVcfParam
     scan.vcf.param <- ScanVcfParam(info=NA, geno = c(alt.support.field, ref.support.field), which = regions.to.filter)
@@ -109,7 +109,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 
 
   # load variants
-  vars <- readVcf(file=TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
+  vars <- readVcf(file=Rsamtools::TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
   if (length(vars) > 0) {
     GenomeInfoDb::seqlevelsStyle(vars) <- "UCSC"
   }
@@ -191,8 +191,8 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 #' @importFrom utils str
 #'
 auxGetVcfSource <- function(vcf.source = NULL, vcf.file){
-  vcf.header <- scanVcfHeader(vcf.file)
-  vcf.header.meta <- meta(vcf.header)
+  vcf.header <- VariantAnnotation::scanVcfHeader(vcf.file)
+  vcf.header.meta <- VariantAnnotation::meta(vcf.header)
 
   # Get VCF source if necessary
   if (is.null(vcf.source)) {

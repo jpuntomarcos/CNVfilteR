@@ -65,7 +65,7 @@ loadVCFs <- function(vcf.paths, sample.names = NULL, cnvs.gr,
 
   # Check input
   assertthat::assert_that(is.character(vcf.paths))
-  assertthat::assert_that(is.number(min.total.depth))
+  assertthat::assert_that(assertthat::is.number(min.total.depth))
   assertthat::assert_that(is.numeric(homozygous.range) && length(homozygous.range) == 2)
   if (!is.null(sample.names))
     assertthat::assert_that(length(vcf.paths) == length(sample.names))

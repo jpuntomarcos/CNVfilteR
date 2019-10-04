@@ -47,17 +47,17 @@ loadCNVcalls <- function(path, chr.column, start.column, end.column, coord.colum
   CNV_DF_COLUMNS <- c("chr", "start", "end", "cnv", "sample")
 
   # Check input
-  assert_that(is.string(path))
-  assert_that(is.string(chr.column))
-  assert_that(is.string(start.column))
-  assert_that(is.string(end.column))
-  assert_that(is.string(cnv.column))
-  assert_that(is.string(deletion))
-  assert_that(is.string(duplication))
-  assert_that(is.string(sep))
+  assertthat::assert_that(assertthat::is.string(path))
+  assertthat::assert_that(assertthat::is.string(chr.column))
+  assertthat::assert_that(assertthat::is.string(start.column))
+  assertthat::assert_that(assertthat::is.string(end.column))
+  assertthat::assert_that(assertthat::is.string(cnv.column))
+  assertthat::assert_that(assertthat::is.string(deletion))
+  assertthat::assert_that(assertthat::is.string(duplication))
+  assertthat::assert_that(assertthat::is.string(sep))
 
   # Read data
-  cnvs.df <- read.csv(path, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)
+  cnvs.df <- utils::read.csv(path, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)
 
   # Rename and select needed columns
   colnames(cnvs.df)[which(names(cnvs.df) == cnv.column)] <- "cnv"

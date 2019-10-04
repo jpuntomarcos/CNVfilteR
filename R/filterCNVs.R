@@ -64,10 +64,10 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
                        dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = FALSE) {
 
   # Check input
-  # assert_that(is.data.frame(cnvs.df))
+  # assertthat::assert_that(is.data.frame(cnvs.df))
   # if (identical(names(cnvs.df), CNV_DF_COLUMNS) | identical(cnvs.df, CNV_DF_COLUMNS_WITH_SAMPLE))
   #   stop("Expected columns for data.frame are 'sample'(optional) 'chr' 'start' 'end' 'cnv'")
-  # assert_that(is.character(vcfs))
+  # assertthat::assert_that(is.character(vcfs))
 
 
   # intersections between two sigmoids curves. For later use
@@ -91,12 +91,12 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
 
     if (cnvs.gr[i]$sample %in% names(vcfs)){
       variants <- vcfs[[cnvs.gr[i]$sample]]
-      matchingVariants <- subsetByOverlaps(variants, cnvs.gr[i],  type = "any")
+      matchingVariants <- IRanges::subsetByOverlaps(variants, cnvs.gr[i],  type = "any")
 
       # count number of ht and hm
       htMatchingVariants <- matchingVariants[matchingVariants$type == "ht",]
-      nHT <- nrow(mcols(htMatchingVariants))
-      nHM <- nrow(mcols(matchingVariants[matchingVariants$type == "hm",]))
+      nHT <- nrow(GenomicRanges::mcols(htMatchingVariants))
+      nHM <- nrow(GenomicRanges::mcols(matchingVariants[matchingVariants$type == "hm",]))
       cnvs.gr[i]$nVariants <- length(matchingVariants)
 
       # if CNV is deletion & ht / (ht + hm)  > ht.deletions.threshold > discard CNV
@@ -125,27 +125,27 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
           if (v$alt.freq <= expected.dup.ht.mean1){
             against <- against + 1
             c2 <- sigmoid.c2.vector[1]
-            score <- - sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # extreme left sigmoid gives evidence of dup suspicius ht > reduces score
+            score <- - pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # extreme left sigmoid gives evidence of dup suspicius ht > reduces score
           } else if (v$alt.freq <= sigmoid.int1) {
             against <- against + 1
             c2 <- sigmoid.c2.vector[2]
-            score <- - sigmoid(v$alt.freq + (c2 - v$alt.freq)*2, a = sigmoid.c1, b = c2)  # left sigmoid gives evidence of dup suspicius ht > reduces score
+            score <- - pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2, a = sigmoid.c1, b = c2)  # left sigmoid gives evidence of dup suspicius ht > reduces score
           } else if (v$alt.freq <= expected.ht.mean){
             in.favor <- in.favor + 1
             c2 <- sigmoid.c2.vector[3]
-            score <- sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # central left sigmoid removes evidence of dup suspicius ht > increases score
+            score <- pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # central left sigmoid removes evidence of dup suspicius ht > increases score
           } else if (v$alt.freq <= sigmoid.int2){
             in.favor <- in.favor + 1
             c2 <- sigmoid.c2.vector[4]
-            score <- sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # central right sigmoid removes evidence of dup suspicius ht > increases score
+            score <- pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # central right sigmoid removes evidence of dup suspicius ht > increases score
           } else if (v$alt.freq <= expected.dup.ht.mean2){
             against <- against + 1
             c2 <- sigmoid.c2.vector[5]
-            score <- - sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # right sigmoid gives evidence of dup suspicius ht > reduces score
+            score <- - pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # right sigmoid gives evidence of dup suspicius ht > reduces score
           } else {
             against <- against + 1
             c2 <- sigmoid.c2.vector[6]
-            score <- - sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # extreme right sigmoid gives evidence of dup suspicius ht > reduces score
+            score <- - pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # extreme right sigmoid gives evidence of dup suspicius ht > reduces score
           }
 
           # compute total score and save score
