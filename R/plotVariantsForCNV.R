@@ -40,6 +40,13 @@
 #'
 plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points.pch = 19, cnv.zoom.margin = TRUE) {
 
+  # Check input
+  assertthat::assert_that(is(cnvfilter.results, "CNVfilteR_results"))
+  assertthat::assert_that(assertthat::is.string(cnv.id))
+  assertthat::assert_that(assertthat::is.number(points.cex))
+  assertthat::assert_that(assertthat::is.number(points.pch))
+  assertthat::assert_that(is.logical(cnv.zoom.margin))
+
   # Get filter params values for later use
   params <- cnvfilter.results$filterParameters
 

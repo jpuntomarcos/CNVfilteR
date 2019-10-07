@@ -16,7 +16,12 @@ CNV_COLORS <- c("0" = "black", "orange", "gray", "purple","black","black","black
 #' @return
 #' input \code{cnvs.gr} with the new column 'cn'
 #'
+#' @import assertthat
+#'
 auxAddCNcolumn <- function(cnvs.gr){
+
+  assertthat::assert_that(is(cnvs.gr, "GRanges") || is.data.frame(cnvs.gr))
+
   cnvs.gr$cn <- 0
   if (length(cnvs.gr[cnvs.gr$cnv == "deletion"]) > 0) {
     cnvs.gr[cnvs.gr$cnv == "deletion"]$cn <- 1

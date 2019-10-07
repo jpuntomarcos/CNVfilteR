@@ -26,6 +26,8 @@
 #'
 plotAllCNVs <- function(cnvs.gr){
 
+  assertthat::assert_that(is(cnvs.gr, "GRanges"))
+
   # Add cn column (required by CopyNumberPlots)
   cnvs.gr <- auxAddCNcolumn(cnvs.gr)
 

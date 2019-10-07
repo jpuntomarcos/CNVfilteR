@@ -64,11 +64,20 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
                        dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = FALSE) {
 
   # Check input
-  # assertthat::assert_that(is.data.frame(cnvs.df))
-  # if (identical(names(cnvs.df), CNV_DF_COLUMNS) | identical(cnvs.df, CNV_DF_COLUMNS_WITH_SAMPLE))
-  #   stop("Expected columns for data.frame are 'sample'(optional) 'chr' 'start' 'end' 'cnv'")
-  # assertthat::assert_that(is.character(vcfs))
-
+  assertthat::assert_that(is(cnvs.gr, "GRanges"))
+  assertthat::assert_that(is.list(vcfs))
+  for (v in vcfs){
+    if (!is(v, "GRanges"))
+      stop("vcfs parameter should be a list of GRanges")
+  }
+  assertthat::assert_that(assertthat::is.number(expected.ht.mean))
+  assertthat::assert_that(assertthat::is.number(expected.dup.ht.mean1))
+  assertthat::assert_that(assertthat::is.number(expected.dup.ht.mean2))
+  assertthat::assert_that(assertthat::is.number(sigmoid.c1))
+  assertthat::assert_that(is.numeric(sigmoid.c2.vector) && length(sigmoid.c2.vector) == 6)
+  assertthat::assert_that(assertthat::is.number(dup.threshold.score))
+  assertthat::assert_that(assertthat::is.number(ht.deletions.threshold))
+  assertthat::assert_that(is.logical(verbose))
 
   # intersections between two sigmoids curves. For later use
   sigmoid.int1 <- mean(c(expected.dup.ht.mean1, expected.ht.mean))

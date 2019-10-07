@@ -51,10 +51,15 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
   assertthat::assert_that(assertthat::is.string(chr.column))
   assertthat::assert_that(assertthat::is.string(start.column))
   assertthat::assert_that(assertthat::is.string(end.column))
+  assertthat::assert_that(assertthat::is.string(coord.column) || is.null(coord.column))
   assertthat::assert_that(assertthat::is.string(cnv.column))
+  assertthat::assert_that(assertthat::is.string(sample.column))
   assertthat::assert_that(assertthat::is.string(deletion))
   assertthat::assert_that(assertthat::is.string(duplication))
   assertthat::assert_that(assertthat::is.string(sep))
+  assertthat::assert_that(assertthat::is.number(skip))
+  assertthat::assert_that(assertthat::is.string(genome))
+  assertthat::assert_that(is.logical(exclude.non.canonical.chrs))
 
   # Read data
   cnvs.df <- utils::read.csv(cnvs.file, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)

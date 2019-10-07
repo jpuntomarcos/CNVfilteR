@@ -65,10 +65,20 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
 
   # Check input
   assertthat::assert_that(is.character(vcf.files))
+  assertthat::assert_that(is.null(sample.names) || (is.character(sample.names) & length(vcf.files) == length(sample.names)) )
+  assertthat::assert_that(is(cnvs.gr, "GRanges"))
   assertthat::assert_that(assertthat::is.number(min.total.depth))
+  assertthat::assert_that(is(regions.to.exclude, "GRanges") || is.null(regions.to.exclude))
+  assertthat::assert_that(assertthat::is.string(vcf.source) || is.null(vcf.source))
+  assertthat::assert_that(assertthat::is.string(ref.support.field) || is.null(ref.support.field))
+  assertthat::assert_that(assertthat::is.string(alt.support.field) || is.null(alt.support.field))
+  assertthat::assert_that(assertthat::is.string(list.support.field) || is.null(list.support.field))
   assertthat::assert_that(is.numeric(homozygous.range) && length(homozygous.range) == 2)
-  if (!is.null(sample.names))
-    assertthat::assert_that(length(vcf.files) == length(sample.names))
+  assertthat::assert_that(is.numeric(heterozygous.range) && length(heterozygous.range)  == 2)
+  assertthat::assert_that(is.logical(exclude.indels))
+  assertthat::assert_that(assertthat::is.string(genome))
+  assertthat::assert_that(is.logical(exclude.non.canonical.chrs))
+  assertthat::assert_that(is.logical(verbose))
 
 
   # Decide where sample names are obtained from

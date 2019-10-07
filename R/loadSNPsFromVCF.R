@@ -47,6 +47,17 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
                             list.support.field = NULL, regions.to.filter = NULL, genome = "hg19",
                             exclude.non.canonical.chrs = TRUE, verbose = TRUE) {
 
+  # Check input
+  assertthat::assert_that(assertthat::is.string(vcf.file))
+  assertthat::assert_that(assertthat::is.string(vcf.source) || is.null(vcf.source))
+  assertthat::assert_that(assertthat::is.string(ref.support.field) || is.null(ref.support.field))
+  assertthat::assert_that(assertthat::is.string(alt.support.field) || is.null(alt.support.field))
+  assertthat::assert_that(assertthat::is.string(list.support.field) || is.null(list.support.field))
+  assertthat::assert_that(is(regions.to.filter, "GRanges") || is.null(regions.to.filter))
+  assertthat::assert_that(assertthat::is.string(genome))
+  assertthat::assert_that(is.logical(exclude.non.canonical.chrs))
+  assertthat::assert_that(is.logical(verbose))
+
   if (verbose) message("Scanning file ", vcf.file, "...")
 
   if(!is.null(regions.to.filter))
