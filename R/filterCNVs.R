@@ -27,9 +27,10 @@
 #' A S3 object with 3 elements:
 #'  - \code{cnvs}: \code{GRanges} with the input CNVs and the meta-columns added during the call:
 #'    - \code{filter}: Set to TRUE if the CNV can be filtered
-#'    - \code{nVariants}: Number of variants matching the CNV
-#'    - \code{nInFavor}: For a CNV duplication, number of variants in favor of filtering (those with a positive score)
-#'    - \code{nAgainst}: For a CNV duplication, number of variants against filtering (those with a negative score)
+#'    - \code{n.total.variants}: Number of variants matching the CNV
+#'    - \code{n.hm.variants}: Number of homozygous variants. They do not give any evidenced for confirming or discarding the CNV.
+#'    - \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
+#'    - \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
 #'    - \code{score}: total score when computing all the variants scores
 #'    - \code{id}: CNV id
 #'  - \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
@@ -87,9 +88,10 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
 
   # Filter CNVs depending on variant calls.
   cnvs.gr$filter <- ''
-  cnvs.gr$nVariants <- ''
-  cnvs.gr$nInFavor <- ''
-  cnvs.gr$nAgainst <- ''
+  cnvs.gr$n.total.variants <- ''
+  cnvs.gr$n.hm.variants <- ''
+  cnvs.gr$n.ht.discard.CNV <- ''
+  cnvs.gr$n.ht.confirm.CNV <- ''
   cnvs.gr$score <- ''
   cnvs.gr$id <- ''
   nCNVs <- length(cnvs.gr)
@@ -106,7 +108,8 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
       htMatchingVariants <- matchingVariants[matchingVariants$type == "ht",]
       nHT <- nrow(GenomicRanges::mcols(htMatchingVariants))
       nHM <- nrow(GenomicRanges::mcols(matchingVariants[matchingVariants$type == "hm",]))
-      cnvs.gr[i]$nVariants <- length(matchingVariants)
+      cnvs.gr[i]$n.total.variants <- length(matchingVariants)
+      cnvs.gr[i]$n.hm.variants <- nHM
 
       # if CNV is deletion & ht / (ht + hm)  > ht.deletions.threshold > discard CNV
       if (cnvs.gr[i]$cnv == "deletion" && nHT > 0 && (nHT / (nHT + nHM) > (ht.deletions.threshold / 100.0) )) {
@@ -114,7 +117,7 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
         if (verbose){
           message(paste0("Discarded CNV deletion at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample))
         }
-        cnvs.gr[i]$nInFavor <- nHT
+        cnvs.gr[i]$n.ht.discard.CNV <- nHT
       }
 
       # Add score column for those variants mathching a duplication CNV
@@ -126,33 +129,33 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
       if (cnvs.gr[i]$cnv == "duplication" & nHT > 0) {
 
         total.score <- 0
-        in.favor <- 0
-        against <- 0
+        discardCNV <- 0
+        confirmCNV <- 0
         for (j in seq_len(length(htMatchingVariants))){
 
           v <- htMatchingVariants[j]
           if (v$alt.freq <= expected.dup.ht.mean1){
-            against <- against + 1
+            confirmCNV <- confirmCNV + 1
             c2 <- sigmoid.c2.vector[1]
             score <- - pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # extreme left sigmoid gives evidence of dup suspicius ht > reduces score
           } else if (v$alt.freq <= sigmoid.int1) {
-            against <- against + 1
+            confirmCNV <- confirmCNV + 1
             c2 <- sigmoid.c2.vector[2]
             score <- - pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2, a = sigmoid.c1, b = c2)  # left sigmoid gives evidence of dup suspicius ht > reduces score
           } else if (v$alt.freq <= expected.ht.mean){
-            in.favor <- in.favor + 1
+            discardCNV <- discardCNV + 1
             c2 <- sigmoid.c2.vector[3]
             score <- pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # central left sigmoid removes evidence of dup suspicius ht > increases score
           } else if (v$alt.freq <= sigmoid.int2){
-            in.favor <- in.favor + 1
+            discardCNV <- discardCNV + 1
             c2 <- sigmoid.c2.vector[4]
             score <- pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # central right sigmoid removes evidence of dup suspicius ht > increases score
           } else if (v$alt.freq <= expected.dup.ht.mean2){
-            against <- against + 1
+            confirmCNV <- confirmCNV + 1
             c2 <- sigmoid.c2.vector[5]
             score <- - pracma::sigmoid(v$alt.freq , a = sigmoid.c1, b = c2)  # right sigmoid gives evidence of dup suspicius ht > reduces score
           } else {
-            against <- against + 1
+            confirmCNV <- confirmCNV + 1
             c2 <- sigmoid.c2.vector[6]
             score <- - pracma::sigmoid(v$alt.freq + (c2 - v$alt.freq)*2 , a = sigmoid.c1, b = c2)  # extreme right sigmoid gives evidence of dup suspicius ht > reduces score
           }
@@ -178,8 +181,8 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
         }
 
         cnvs.gr[i]$score <- total.score
-        cnvs.gr[i]$nAgainst <- against
-        cnvs.gr[i]$nInFavor <- in.favor
+        cnvs.gr[i]$n.ht.confirm.CNV <- confirmCNV
+        cnvs.gr[i]$n.ht.discard.CNV <- discardCNV
       }
 
 
@@ -198,7 +201,7 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   }
 
   # Calculate % with matching variants to be filtered
-  nCNVsWithMatchingVariants <- length(cnvs.gr[cnvs.gr$nVariants > 0 ,])
+  nCNVsWithMatchingVariants <- length(cnvs.gr[cnvs.gr$n.total.variants > 0 ,])
   pct <- round(nFiltered/nCNVsWithMatchingVariants*100, 2)
   if (verbose){
     message(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))

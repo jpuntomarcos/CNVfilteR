@@ -95,7 +95,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
 
   # Draw legend
-  graphics::legend("topright", legend=c("In favor of filtering", "Against filtering", "Neutral", "CNV deletion", "CNV duplication"),
+  graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
          xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
          col = c("#11CC11", "brown", "blue", NA, NA), border = "white", bty="n",
          fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7, box.col = "white")
