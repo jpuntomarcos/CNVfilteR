@@ -104,7 +104,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
 
   # Draw legend
   graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
-         xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
+         inset=c(0.00, -0.18), xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
          col = c("#11CC11", "brown", "blue", NA, NA), border = "white", bty="n",
          fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7, box.col = "white")
 
