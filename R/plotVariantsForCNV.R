@@ -84,7 +84,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   ## Plot ##
 
   # Plot different elements
-  pp <- getDefaultPlotParams(4)
+  pp <- karyoploteR::getDefaultPlotParams(4)
   pp$leftmargin <- 0.15
   kp <- karyoploteR::plotKaryotype(zoom = zoomGR, plot.type = 4, plot.params = pp, main = title)
   karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0, cex = 0.7, digits = 5, add.units = TRUE)
@@ -96,7 +96,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
 
   # Draw legend
   graphics::legend("topright", legend=c("In favor of filtering", "Against filtering", "Neutral", "CNV deletion", "CNV duplication"),
-         inset=c(0.00, 0.03), xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
+         xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
          col = c("#11CC11", "brown", "blue", NA, NA), border = "white", bty="n",
          fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7, box.col = "white")
 
