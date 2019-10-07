@@ -89,10 +89,18 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   kp <- karyoploteR::plotKaryotype(zoom = zoomGR, plot.type = 4, plot.params = pp, main = title)
   karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0, cex = 0.7, digits = 5, add.units = TRUE)
   CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0, r1=0.05, labels = "CNV")
-  karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
-         labels = c("0", duphtmean1, htmean, duphtmean2, "1"), tick.pos = c(0, duphtmean1, htmean, duphtmean2, 1))
   karyoploteR::kpAddLabels(kp, r0 = r0, r1 = r1, labels = c("alt.freq"), srt = 90, pos = 3, cex = 0.8, label.margin = 0.1)
-  karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
+
+  # Add guide lines depending on CNV type
+  if (cnv$cnv == "deletion") {
+    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
+                        labels = c("0", htmean, "1"), tick.pos = c(0, htmean, 1))
+    karyoploteR::kpAbline(kp, h=c(htmean), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
+  } else if (cnv$cnv == "duplication"){
+    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
+                        labels = c("0", duphtmean1, htmean, duphtmean2, "1"), tick.pos = c(0, duphtmean1, htmean, duphtmean2, 1))
+    karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
+  }
 
   # Draw legend
   graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
