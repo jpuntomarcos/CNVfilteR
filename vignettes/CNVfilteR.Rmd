@@ -114,6 +114,25 @@ plot easily the CNV with id=3 and all the variants matching it.
 plotVariantsForCNV(results, "3")
 ```
 
+On the opposite side, we can observe those CNVs that cannot be discarded:
+```{r}
+as.data.frame(results$cnvs[results$cnvs$filter != TRUE])
+```
+
+For example, the CNV with id=14 has one variant matching it. If we get
+the variant info, we see that the variant has an allele frequency very close to
+the default expected duplication value, 0.66.
+
+```{r}
+results$variantsForEachCNV[["14"]]
+```
+
+So, no evidence was found for discarding the CNV. We can also plot the CNV and the variant:
+```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
+plotVariantsForCNV(results, "14")
+```
+
+
 
 
 
