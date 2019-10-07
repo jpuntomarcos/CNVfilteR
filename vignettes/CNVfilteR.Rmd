@@ -91,10 +91,10 @@ results
 And we can check those CNVs that can be filtered out:
 
 ```{r}
-as.data.frame(results$cnvs[results$cnvs$filter == TRUE])
+results$cnvs[results$cnvs$filter == TRUE]
 ```
 
-As an example, we can observe that the CNV with id=3 has 4 variants matching 
+As an example, we can observe that the CNV with **cnv.id**=3 has 4 variants matching 
 it: 2 in favor of discarding it, two against discarding it. If we want to know
 more about the variants matching a certain CNV we can do:
 ```{r}
@@ -108,13 +108,13 @@ they obtain a low negative score. All these default values and others can
 be modified in the `filterCNVs()` function.
 
 Finally, we may be interested in plotting the results. For example, we can
-plot easily the duplication CNV with id=3 and all the variants matching it.
+plot easily the duplication CNV with **cnv.id**=3 and all the variants matching it.
 
 ```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
 plotVariantsForCNV(results, "3")
 ```
 
-We can do the same to plot the deletion CNV with id=19, where all variants
+We can do the same to plot the deletion CNV with **cnv.id**=19, where all variants
 discard the CNV except one homozygous variant that does not give us any 
 information for supporting or discarding the CNV:
 
@@ -125,10 +125,10 @@ plotVariantsForCNV(results, "19")
 
 On the opposite side, we can observe those CNVs that cannot be discarded:
 ```{r}
-as.data.frame(results$cnvs[results$cnvs$filter != TRUE])
+results$cnvs[results$cnvs$filter != TRUE]
 ```
 
-For example, the CNV with id=14 has one variant matching it. If we get
+For example, the CNV with **cnv.id**=14 has one variant matching it. If we get
 the variant info, we see that the variant has an allele frequency very close to
 the default expected duplication value, 0.66.
 

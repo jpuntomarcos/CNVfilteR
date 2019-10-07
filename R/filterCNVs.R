@@ -93,12 +93,12 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   cnvs.gr$n.ht.discard.CNV <- ''
   cnvs.gr$n.ht.confirm.CNV <- ''
   cnvs.gr$score <- ''
-  cnvs.gr$id <- ''
+  cnvs.gr$cnv.id <- ''
   nCNVs <- length(cnvs.gr)
   for (i in seq_len(nCNVs)){
 
     cnvId <- toString(i)
-    cnvs.gr[i]$id <- cnvId
+    cnvs.gr[i]$cnv.id <- cnvId
 
     if (cnvs.gr[i]$sample %in% names(vcfs)){
       variants <- vcfs[[cnvs.gr[i]$sample]]

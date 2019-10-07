@@ -58,7 +58,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
 
   # Add cn column (required by CopyNumberPlots)
   cnvs.gr <- auxAddCNcolumn(cnvfilter.results$cnvs)
-  cnv <- cnvs.gr[cnvs.gr$id == cnv.id,]
+  cnv <- cnvs.gr[cnvs.gr$cnv.id == cnv.id,]
 
   # Build main title
   title <-  paste0(cnv$cnv, " at ", toString(cnv))
