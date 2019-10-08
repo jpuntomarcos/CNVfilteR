@@ -48,10 +48,13 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
 
   # Check input
   assertthat::assert_that(assertthat::is.string(cnvs.file))
-  assertthat::assert_that(assertthat::is.string(chr.column))
-  assertthat::assert_that(assertthat::is.string(start.column))
-  assertthat::assert_that(assertthat::is.string(end.column))
-  assertthat::assert_that(assertthat::is.string(coord.column) || is.null(coord.column))
+  if (is.null(coord.column)){
+    assertthat::assert_that(assertthat::is.string(chr.column))
+    assertthat::assert_that(assertthat::is.string(start.column))
+    assertthat::assert_that(assertthat::is.string(end.column))
+  } else {
+    assertthat::assert_that(assertthat::is.string(coord.column))
+  }
   assertthat::assert_that(assertthat::is.string(cnv.column))
   assertthat::assert_that(assertthat::is.string(sample.column))
   assertthat::assert_that(assertthat::is.string(deletion))
@@ -77,6 +80,15 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
     cnvs.df$chr <- parts[,1]
     cnvs.df$start <- parts[,2]
     cnvs.df$end <- parts[,3]
+  }
+
+  # Assert CNV type values are correct
+  if(!setequal(unique(cnvs.df$cnv), c(deletion, duplication))){
+    stop(paste0("Values found in ", cnv.column, " column are [",
+               toString(unique(cnvs.df$cnv)), "] but expected values are '",
+               deletion, "' and '", duplication,
+               "'. Please, use the duplication and deletion parameters to select the expected values for the ",
+               cnv.column ," column"))
   }
 
 
