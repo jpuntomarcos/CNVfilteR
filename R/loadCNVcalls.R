@@ -19,7 +19,7 @@
 #' @param deletion Text used in the \code{cnv.column} to represent deletion CNVs. (Defaults to "deletion")
 #' @param duplication Text used in the \code{cnv.column} to represent duplication CNVs. (Defaults to "duplication")
 #' @param sep Separator symbol to load the csv/tsv file. (Defaults to "\\t")
-#' @param skip Number of rows that shoud be skipped when reading the csv/tsv file. (Defaults to 0)
+#' @param skip Number of rows that should be skipped when reading the csv/tsv file. (Defaults to 0)
 #' @param genome The name of the genome. (Defaults to "hg19")
 #' @param exclude.non.canonical.chrs Whether to exclude non canonical chromosomes (Defaults to TRUE)
 #'
