@@ -33,7 +33,7 @@ loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
 
 \item{sep}{Separator symbol to load the csv/tsv file. (Defaults to "\\t")}
 
-\item{skip}{Number of rows that shoud be skipped when reading the csv/tsv file. (Defaults to 0)}
+\item{skip}{Number of rows that should be skipped when reading the csv/tsv file. (Defaults to 0)}
 
 \item{genome}{The name of the genome. (Defaults to "hg19")}
 
