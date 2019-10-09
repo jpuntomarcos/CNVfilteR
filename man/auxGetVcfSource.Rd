@@ -15,5 +15,5 @@ auxGetVcfSource(vcf.source = NULL, vcf.file)
 VCF source
 }
 \description{
-Obtains VCF source from a given VCF file path and checks if the source is supported. Auxiliar function used by \code{loadSNPsFromVCF}.
+Obtains VCF source from a given VCF file path. Auxiliar function used by \code{loadSNPsFromVCF}.
 }

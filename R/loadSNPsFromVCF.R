@@ -69,20 +69,36 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   # Get VCF source
   vcf.source <- auxGetVcfSource(vcf.source, vcf.file)
 
+  # Check if vcf source was finally recognized
+  supported.tools <- c("VarScan2", "strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper")
+  msg <- ""
+  if (!vcf.source %in% supported.tools){
+    if ( (is.null(ref.support.field) | is.null(alt.support.field)) & (is.null(list.support.field)) )  {
+      stop(paste("VCF source was not recognized, and ref.support.field/alt.support.field/list.support.field were not provided. Expected options are:", utils::str(supported.tools)))
+    } else {
+      if (!is.null(list.support.field)) {
+        msg <- paste("VCF source", vcf.source ,"is not supported, but list.support.field was provided. ")
+      } else {
+        msg <- paste("VCF source", vcf.source ,"is not supported, but ref.support.field/alt.support.field were provided. ")
+      }
+    }
+  } else {
+    msg <- paste(vcf.source, "was found as source in the VCF metadata,")
+  }
+
 
   ##  GET VCF FIELDS  ##
 
   # Detect format: recognise fields where allelic depth and frequency are stored
   support.field.is.list <- FALSE
   ref.and.forward.fields <- FALSE
-  msg <- paste(vcf.source, "was found as source in the VCF metadata,")
 
   if (vcf.source == "VarScan2") {
     if (is.null(ref.support.field)) ref.support.field <- "RD"
     if (is.null(alt.support.field)) alt.support.field <- "AD"
     msg <- paste(msg, ref.support.field, "will be used as ref allele depth field,", alt.support.field, "will be used as alt allele depth field.")
-  } else if (vcf.source %in% c("strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper")) {
-    if (is.null(list.support.field)) ref.support.field <- alt.support.field <- list.support.field <- "AD"
+  } else if (vcf.source %in% c("strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper") | !(is.null(list.support.field)) ) {
+    if (!is.null(list.support.field)) ref.support.field <- alt.support.field <- list.support.field <- "AD"
     support.field.is.list <- TRUE
     msg <- paste(msg, list.support.field, "will be used as allele support field in a list format: ref allele, alt allele.")
   }
@@ -189,7 +205,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 #' auxGetVcfSource
 #'
 #' @description
-#' Obtains VCF source from a given VCF file path and checks if the source is supported. Auxiliar function used by \code{loadSNPsFromVCF}.
+#' Obtains VCF source from a given VCF file path. Auxiliar function used by \code{loadSNPsFromVCF}.
 #'
 #' @param vcf.source VCF source. Leave NULL to allow the function to recognize it. Otherwise, the function will not try to recognize the source. (Defaults to NULL)
 #' @param vcf.file VCF file path
@@ -235,11 +251,6 @@ auxGetVcfSource <- function(vcf.source = NULL, vcf.file){
   } else if (grepl("freeBayes", vcf.source)){
     vcf.source <- "freeBayes"
   }
-
-  # Check if vcf source was finally recognized
-  supported.tools <- c("VarScan2", "strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper")
-  if (!vcf.source %in% supported.tools)
-    stop(paste("VCF source was not recognized. Expected options are:", utils::str(supported.tools)))
 
   return(vcf.source)
 }
