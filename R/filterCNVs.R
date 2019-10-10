@@ -5,7 +5,7 @@
 #'
 #' @details
 #' Checks all the variants (SNV and optionally INDELs) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
-#' It returs a S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
+#' It returns an S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
 #'
 #' A CNV deletion can be filtered if there is at least \code{ht.deletions.threshold}% of heterozygous variants matching the CNV.
 #' A CNV duplication can be filtered if the \code{score} is >= \code{dup.threshold.score} after computing all heterozygous variants matching the CNV.
@@ -14,9 +14,9 @@
 #'
 #' @param cnvs.gr \code{GRanges} containing CNVs to be filtered. Use \code{loadCNVcalls} to load them.
 #' @param vcfs List of \code{GRanges} containing all variants (SNV/indel) obtaining with the \code{loadVCFs} function.
-#' @param expected.ht.mean Expected heterozygous SNV/indel depth. (defaults to 50)
-#' @param expected.dup.ht.mean1 Expected heterozygous SNV/indel depth when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33)
-#' @param expected.dup.ht.mean2 Expected heterozygous SNV/indel depth when the variant IS in the same allele than the CNV duplication call. (defaults to 66)
+#' @param expected.ht.mean Expected heterozygous SNV/indel allele frequency (defaults to 50)
+#' @param expected.dup.ht.mean1 Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33)
+#' @param expected.dup.ht.mean2 Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call. (defaults to 66)
 #' @param sigmoid.c1 Sigmoid c1 parameter. (defaults to 2)
 #' @param sigmoid.c2.vector Vector containing sigmoid c2 parameters for the six sigmoids functions. (defaults to c(28, 39, 44, 56, 60, 72))
 #' @param dup.threshold.score Limit value to decide if a CNV duplication can be filtered or not. A CNV duplication can be filtered if the total score computed from heterozygous variants matching the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)
@@ -32,7 +32,7 @@
 #'    - \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
 #'    - \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
 #'    - \code{score}: total score when computing all the variants scores
-#'    - \code{id}: CNV id
+#'    - \code{cnv.id}: CNV id
 #'  - \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
 #'  - \code{filterParameters}: input parameters used for filtering
 #'
