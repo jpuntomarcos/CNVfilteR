@@ -69,7 +69,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
       title <- paste0(title, ", it can be filtered with a score of ", round(as.numeric(cnv$score), 4))
     }
   }
-  # d85c4b  f06c10
+
   # Prepare vars
   r0 = 0.1; r1=0.8; neutralColor <- "blue"; confirmColor <- "#3D954A"; discardColor <- "#F45C52"
   duphtmean1 <- params$expected.dup.ht.mean1 / 100.0
@@ -106,7 +106,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
          inset=c(0.00, -0.18), xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
          col = c(discardColor, confirmColor, neutralColor, NA, NA), border = "white", bty="n",
-         fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7, box.col = "white")
+         fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7)
 
   # Add points depending o CNV type
   if (cnv$cnv == "deletion") {
