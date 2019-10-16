@@ -189,9 +189,9 @@ auxProcessVariants <- function(vars, cnvGR, heterozygous.range, homozygous.range
     mcolumns$type <- ""
     for (i in seq_len(nrow(mcolumns))){
       v <- mcolumns[i,]
-      if (v$alt.freq > heterozygous.range[1] & v$alt.freq < heterozygous.range[2]) {
+      if (v$alt.freq >= heterozygous.range[1] & v$alt.freq <= heterozygous.range[2]) {
         mcolumns[i,"type"] <- "ht"
-      } else if (v$alt.freq > homozygous.range[1] & v$alt.freq < homozygous.range[2]){
+      } else if (v$alt.freq >= homozygous.range[1] & v$alt.freq <= homozygous.range[2]){
         mcolumns[i,"type"] <- "hm"
       }
     }
