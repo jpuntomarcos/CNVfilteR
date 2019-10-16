@@ -5,9 +5,9 @@
 \title{filterCNVs}
 \usage{
 filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
-  expected.dup.ht.mean1 = 33, expected.dup.ht.mean2 = 66,
-  sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 39, 44, 56, 60, 72),
-  dup.threshold.score = 0.5, ht.deletions.threshold = 15,
+  expected.dup.ht.mean1 = 33.3, expected.dup.ht.mean2 = 66.6,
+  sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 38.3, 44.7, 55.3, 61.3,
+  71.3), dup.threshold.score = 0.5, ht.deletions.threshold = 15,
   verbose = FALSE)
 }
 \arguments{
@@ -23,7 +23,7 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
 
 \item{sigmoid.c1}{Sigmoid c1 parameter. (defaults to 2)}
 
-\item{sigmoid.c2.vector}{Vector containing sigmoid c2 parameters for the six sigmoids functions. (defaults to c(28, 39, 44, 56, 60, 72))}
+\item{sigmoid.c2.vector}{Vector containing sigmoid c2 parameters for the six sigmoids functions. (defaults to c(28, 38.3, 44.7, 55.3, 61.3, 71.3))}
 
 \item{dup.threshold.score}{Limit value to decide if a CNV duplication can be filtered or not. A CNV duplication can be filtered if the total score computed from heterozygous variants matching the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)}
 
