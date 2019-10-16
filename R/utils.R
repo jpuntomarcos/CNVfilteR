@@ -1,6 +1,8 @@
-# Constant: color schema used for plotting CNVs with CopyNumberPlots package
+# Constants: color schema used for plotting CNVs with CopyNumberPlots package
 CNV_COLORS <- c("0" = "black", "orange", "gray", "purple","black","black","black","black")
-
+CONFIRM_COLOR <- "#3D954A"
+DISCARD_COLOR <- "#F45C52"
+NEUTRAL_COLOR <- "blue";
 
 #' auxAddCNcolumn
 #'

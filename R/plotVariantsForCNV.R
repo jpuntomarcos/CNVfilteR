@@ -71,7 +71,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   }
 
   # Prepare vars
-  r0 = 0.1; r1=0.8; neutralColor <- "blue"; confirmColor <- "#3D954A"; discardColor <- "#F45C52"
+  r0 = 0.1; r1=0.8;
   duphtmean1 <- params$expected.dup.ht.mean1 / 100.0
   duphtmean2 <- params$expected.dup.ht.mean2 / 100.0
   htmean <- params$expected.ht.mean / 100.0
@@ -86,41 +86,48 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
   # Plot different elements
   pp <- karyoploteR::getDefaultPlotParams(4)
   pp$leftmargin <- 0.15
-  kp <- karyoploteR::plotKaryotype(zoom = zoomGR, plot.type = 4, plot.params = pp, main = title)
-  karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0, cex = 0.7, digits = 5, add.units = TRUE)
-  CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0, r1=0.05, labels = "CNV")
-  karyoploteR::kpAddLabels(kp, r0 = r0, r1 = r1, labels = c("variant allele frequency"), srt = 90, pos = 3, cex = 0.8, label.margin = 0.1)
+  kp <- karyoploteR::plotKaryotype(zoom = zoomGR, plot.type = 4,
+                                   plot.params = pp, main = title)
+  karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0,
+                                cex = 0.7, digits = 5, add.units = TRUE)
+  CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0,
+                                       r1=0.05, labels = "CNV")
+  karyoploteR::kpAddLabels(kp, r0 = r0, r1 = r1, labels = c("variant allele frequency"),
+                           srt = 90, pos = 3, cex = 0.8, label.margin = 0.1)
 
   # Add guide lines depending on CNV type
   if (cnv$cnv == "deletion") {
     karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
                         labels = c("0", htmean, "1"), tick.pos = c(0, htmean, 1))
-    karyoploteR::kpAbline(kp, h=c(htmean), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
+    karyoploteR::kpAbline(kp, h=c(htmean), col="gray80", ymin=0, ymax=1, r0=r0,
+                          r1=r1, lty=2, lwd = 1)
   } else if (cnv$cnv == "duplication"){
     karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
-                        labels = c("0", duphtmean1, htmean, duphtmean2, "1"), tick.pos = c(0, duphtmean1, htmean, duphtmean2, 1))
-    karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80", ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
+                        labels = c("0", duphtmean1, htmean, duphtmean2, "1"),
+                        tick.pos = c(0, duphtmean1, htmean, duphtmean2, 1))
+    karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80",
+                          ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
   }
 
   # Draw legend
   graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
          inset=c(0.00, -0.18), xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
-         col = c(discardColor, confirmColor, neutralColor, NA, NA), border = "white", bty="n",
+         col = c(DISCARD_COLOR, CONFIRM_COLOR, NEUTRAL_COLOR, NA, NA), border = "white", bty="n",
          fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7)
 
   # Add points depending o CNV type
   if (cnv$cnv == "deletion") {
     v_sub <- vars[vars$type=="ht",]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=discardColor, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
     v_sub <- vars[vars$type=="hm",]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=neutralColor, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
   } else if (cnv$cnv == "duplication") {
     v_sub <- vars[vars$score == 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=neutralColor, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
     v_sub <- vars[vars$score > 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=discardColor, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
     v_sub <- vars[vars$score < 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=confirmColor, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=CONFIRM_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
   }
 
 
