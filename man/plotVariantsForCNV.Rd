@@ -5,7 +5,8 @@
 \title{plotVariantsForCNV}
 \usage{
 plotVariantsForCNV(cnvfilter.results, cnv.id, points.cex = 1,
-  points.pch = 19, cnv.zoom.margin = TRUE)
+  points.pch = 19, legend.x.pos = 0.08, legend.y.pos = 0.25,
+  cnv.zoom.margin = TRUE)
 }
 \arguments{
 \item{cnvfilter.results}{S3 object returned by \code{filterCNVs} function}
@@ -15,6 +16,10 @@ plotVariantsForCNV(cnvfilter.results, cnv.id, points.cex = 1,
 \item{points.cex}{Points cex (size). (Defaults to 1)}
 
 \item{points.pch}{Points pch (symbol). (Defaults to 19)}
+
+\item{legend.x.pos}{Legend x position. (Defaults to 0.08)}
+
+\item{legend.y.pos}{Legend y position. (Defaults to 0.25)}
 
 \item{cnv.zoom.margin}{If TRUE, the zoom leaves an small margin at both sides of the CNV. False otherwise. (Defaults to TRUE)}
 }

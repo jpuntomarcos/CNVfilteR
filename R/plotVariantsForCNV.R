@@ -7,6 +7,8 @@
 #' @param cnv.id CNV id for which to plot variants
 #' @param points.cex Points cex (size). (Defaults to 1)
 #' @param points.pch Points pch (symbol). (Defaults to 19)
+#' @param legend.x.pos Legend x position. (Defaults to 0.08)
+#' @param legend.y.pos Legend y position. (Defaults to 0.25)
 #' @param cnv.zoom.margin If TRUE, the zoom leaves an small margin at both sides of the CNV. False otherwise. (Defaults to TRUE)
 #'
 #' @return invisibly returns a \code{karyoplot} object
@@ -38,8 +40,11 @@
 #' @import assertthat
 #' @export plotVariantsForCNV
 #'
-plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points.pch = 19, cnv.zoom.margin = TRUE) {
-
+plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, 
+                               points.pch = 19,
+                               legend.x.pos = 0.08, legend.y.pos = 0.25,
+                               cnv.zoom.margin = TRUE) {
+  
   # Check input
   assertthat::assert_that(is(cnvfilter.results, "CNVfilteR_results"))
   assertthat::assert_that(assertthat::is.string(cnv.id))
@@ -97,23 +102,26 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, points
 
   # Add guide lines depending on CNV type
   if (cnv$cnv == "deletion") {
-    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
+    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.8,
                         labels = c("0", htmean, "1"), tick.pos = c(0, htmean, 1))
     karyoploteR::kpAbline(kp, h=c(htmean), col="gray80", ymin=0, ymax=1, r0=r0,
                           r1=r1, lty=2, lwd = 1)
   } else if (cnv$cnv == "duplication"){
-    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.7,
+    karyoploteR::kpAxis(kp, ymin=0, ymax=1, r0=r0, r1=r1, col="gray50", cex=0.8,
                         labels = c("0", duphtmean1, htmean, duphtmean2, "1"),
                         tick.pos = c(0, duphtmean1, htmean, duphtmean2, 1))
     karyoploteR::kpAbline(kp, h=c(duphtmean1, htmean, duphtmean2), col="gray80",
                           ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
   }
 
+  
   # Draw legend
-  graphics::legend("topright", legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
-         inset=c(0.00, -0.18), xpd = TRUE, pch = c(points.pch, points.pch, points.pch, NA, NA),
-         col = c(DISCARD_COLOR, CONFIRM_COLOR, NEUTRAL_COLOR, NA, NA), border = "white", bty="n",
-         fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.7)
+  graphics::legend(x=legend.x.pos, y=legend.y.pos, legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
+        pch = c(points.pch, points.pch, points.pch, NA, NA), pt.cex=1, bg = "white",  box.col = "gray",
+        col = c(DISCARD_COLOR, CONFIRM_COLOR, NEUTRAL_COLOR, NA, NA),
+        border = "white",
+        fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.8,
+        bty="l")
 
   # Add points depending o CNV type
   if (cnv$cnv == "deletion") {
