@@ -114,7 +114,7 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
       if (cnvs.gr[i]$cnv == "deletion" && nHT > 0 && (nHT / (nHT + nHM) > (ht.deletions.threshold / 100.0) )) {
         cnvs.gr[i]$filter <- TRUE
         if (verbose){
-          message(paste0("Discarded CNV deletion at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample))
+          message(paste0("CNV deletion at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample, " can be filtered"))
         }
         cnvs.gr[i]$n.ht.discard.CNV <- nHT
       }
@@ -159,12 +159,9 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
         if (total.score >= dup.threshold.score){
           cnvs.gr[i]$filter <- TRUE
           if (verbose){
-            message(paste0("Discarded CNV duplication at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample,  ", score: ", round(total.score, 4)))
-            message(matchingVariants)
-          }
-        } else {
-          if (verbose){
-            message(paste0("CNV duplication NOT discarded at ", toString(cnvs.gr[i]) ," for sample ", cnvs.gr[i]$sample, ", score: ", round(total.score, 4)))
+            message(paste0("CNV duplication at ", toString(cnvs.gr[i]) ,
+                           " for sample ", cnvs.gr[i]$sample,
+                           " can be filtered, score: ", round(total.score, 4)))
             message(matchingVariants)
           }
         }
