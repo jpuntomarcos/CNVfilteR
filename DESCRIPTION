@@ -24,7 +24,8 @@ Imports:
   VariantAnnotation,
   Rsamtools,
   GenomeInfoDb,
-  Biostrings
+  Biostrings,
+  methods
 Suggests: 
   knitr,
   BSgenome.Hsapiens.UCSC.hg19,
