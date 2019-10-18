@@ -37,16 +37,17 @@
 #' @import karyoploteR
 #' @importFrom graphics legend
 #' @importFrom GenomicRanges width start end
+#' @importFrom methods is
 #' @import assertthat
 #' @export plotVariantsForCNV
 #'
-plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1, 
+plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
                                points.pch = 19,
                                legend.x.pos = 0.08, legend.y.pos = 0.25,
                                cnv.zoom.margin = TRUE) {
-  
+
   # Check input
-  assertthat::assert_that(is(cnvfilter.results, "CNVfilteR_results"))
+  assertthat::assert_that(methods::is(cnvfilter.results, "CNVfilteR_results"))
   assertthat::assert_that(assertthat::is.string(cnv.id))
   assertthat::assert_that(assertthat::is.number(points.cex))
   assertthat::assert_that(assertthat::is.number(points.pch))
@@ -76,7 +77,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
   }
 
   # Prepare vars
-  r0 = 0.1; r1=0.8;
+  r0 = 0.1; r1=0.95;
   duphtmean1 <- params$expected.dup.ht.mean1 / 100.0
   duphtmean2 <- params$expected.dup.ht.mean2 / 100.0
   htmean <- params$expected.ht.mean / 100.0
@@ -91,12 +92,14 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
   # Plot different elements
   pp <- karyoploteR::getDefaultPlotParams(4)
   pp$leftmargin <- 0.15
+  pp$ideogramheight <- 2
+  pp$topmargin <- 40
   kp <- karyoploteR::plotKaryotype(zoom = zoomGR, plot.type = 4,
                                    plot.params = pp, main = title)
   karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0,
                                 cex = 0.7, digits = 5, add.units = TRUE)
   CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0,
-                                       r1=0.05, labels = "CNV")
+                                       r1=0.03, labels = "CNV")
   karyoploteR::kpAddLabels(kp, r0 = r0, r1 = r1, labels = c("variant allele frequency"),
                            srt = 90, pos = 3, cex = 0.8, label.margin = 0.1)
 
@@ -114,7 +117,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
                           ymin=0, ymax=1, r0=r0, r1=r1, lty=2, lwd = 1)
   }
 
-  
+
   # Draw legend
   graphics::legend(x=legend.x.pos, y=legend.y.pos, legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
         pch = c(points.pch, points.pch, points.pch, NA, NA), pt.cex=1, bg = "white",  box.col = "gray",
