@@ -17,9 +17,9 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
 
 \item{expected.ht.mean}{Expected heterozygous SNV/indel allele frequency (defaults to 50)}
 
-\item{expected.dup.ht.mean1}{Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33)}
+\item{expected.dup.ht.mean1}{Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33.3)}
 
-\item{expected.dup.ht.mean2}{Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call. (defaults to 66)}
+\item{expected.dup.ht.mean2}{Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call. (defaults to 66.6)}
 
 \item{sigmoid.c1}{Sigmoid c1 parameter. (defaults to 2)}
 
