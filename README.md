@@ -34,3 +34,9 @@ to use `r BiocStyle::Biocpkg("BiocManager")`.
       install.packages("BiocManager")
   BiocManager::install("CNVfilteR")
 ```
+
+
+## More information
+
+Please, see manual and vignette at `r BiocStyle::Biocpkg("CNVfilteR")` 
+bioconductor site.
