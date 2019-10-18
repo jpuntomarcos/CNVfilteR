@@ -15,8 +15,8 @@
 #' @param cnvs.gr \code{GRanges} containing CNVs to be filtered. Use \code{loadCNVcalls} to load them.
 #' @param vcfs List of \code{GRanges} containing all variants (SNV/indel) obtaining with the \code{loadVCFs} function.
 #' @param expected.ht.mean Expected heterozygous SNV/indel allele frequency (defaults to 50)
-#' @param expected.dup.ht.mean1 Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33)
-#' @param expected.dup.ht.mean2 Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call. (defaults to 66)
+#' @param expected.dup.ht.mean1 Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call. (defaults to 33.3)
+#' @param expected.dup.ht.mean2 Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call. (defaults to 66.6)
 #' @param sigmoid.c1 Sigmoid c1 parameter. (defaults to 2)
 #' @param sigmoid.c2.vector Vector containing sigmoid c2 parameters for the six sigmoids functions. (defaults to c(28, 38.3, 44.7, 55.3, 61.3, 71.3))
 #' @param dup.threshold.score Limit value to decide if a CNV duplication can be filtered or not. A CNV duplication can be filtered if the total score computed from heterozygous variants matching the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)
@@ -57,6 +57,7 @@
 #' @import assertthat
 #' @importFrom IRanges subsetByOverlaps
 #' @importFrom GenomicRanges mcols
+#' @importFrom methods is
 #' @export filterCNVs
 #'
 filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mean1 = 33.3, expected.dup.ht.mean2 = 66.6,
@@ -64,10 +65,10 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
                        dup.threshold.score = 0.5, ht.deletions.threshold = 15, verbose = FALSE) {
 
   # Check input
-  assertthat::assert_that(is(cnvs.gr, "GRanges"))
+  assertthat::assert_that(methods::is(cnvs.gr, "GRanges"))
   assertthat::assert_that(is.list(vcfs))
   for (v in vcfs){
-    if (!is(v, "GRanges"))
+    if (!methods::is(v, "GRanges"))
       stop("vcfs parameter should be a list of GRanges")
   }
   assertthat::assert_that(assertthat::is.number(expected.ht.mean))
@@ -201,57 +202,4 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   class(resultsObject) <- "CNVfilteR_results"
 
   return(resultsObject)
-}
-
-
-#' getVariantScore
-#'
-#' @description
-#' Returns score for a given allele frequency
-#'
-#' @details
-#' Returns a value between -1 and 1. If the allele frequency increases the
-#' evidence of discarding a CNV, then the score is positive. If the allele
-#' frequency decreases the evidence for discarding a CNV, the score is negative.
-#'
-#' The model is based on the fuzzy logic and the score is calculated
-#' using sigmoids. See the vignette to get more details.
-#'
-#' @param freq Variant allele frequency
-#' @param expected.ht.mean Expected heterozygous SNV/indel allele frequency
-#' @param expected.dup.ht.mean1 Expected heterozygous SNV/indel allele frequency when the variant IS NOT in the same allele than the CNV duplication call
-#' @param expected.dup.ht.mean2 Expected heterozygous SNV/indel allele frequency when the variant IS in the same allele than the CNV duplication call
-#' @param sigmoid.c1 Sigmoid c1 parameter
-#' @param sigmoid.c2.vector Vector containing sigmoid c2 parameters for the six sigmoids functions
-#' @param sigmoid.int1 Sigmoid int 1
-#' @param sigmoid.int2 Sigmoid int 2
-#'
-#' @return variant score in the [-1, 1] range
-#'
-#' @importFrom pracma sigmoid
-#'
-getVariantScore <- function(freq, expected.ht.mean, expected.dup.ht.mean1, expected.dup.ht.mean2,
-                            sigmoid.c1, sigmoid.c2.vector, sigmoid.int1, sigmoid.int2) {
-
-  if (freq <= expected.dup.ht.mean1){
-    c2 <- sigmoid.c2.vector[1]
-    score <- - pracma::sigmoid(freq , a = sigmoid.c1, b = c2)  # extreme left sigmoid gives evidence of dup suspicius ht > reduces score
-  } else if (freq <= sigmoid.int1) {
-    c2 <- sigmoid.c2.vector[2]
-    score <- - pracma::sigmoid(freq + (c2 - freq)*2, a = sigmoid.c1, b = c2)  # left sigmoid gives evidence of dup suspicius ht > reduces score
-  } else if (freq <= expected.ht.mean){
-    c2 <- sigmoid.c2.vector[3]
-    score <- pracma::sigmoid(freq , a = sigmoid.c1, b = c2)  # central left sigmoid removes evidence of dup suspicius ht > increases score
-  } else if (freq <= sigmoid.int2){
-    c2 <- sigmoid.c2.vector[4]
-    score <- pracma::sigmoid(freq + (c2 - freq)*2 , a = sigmoid.c1, b = c2)  # central right sigmoid removes evidence of dup suspicius ht > increases score
-  } else if (freq <= expected.dup.ht.mean2){
-    c2 <- sigmoid.c2.vector[5]
-    score <- - pracma::sigmoid(freq , a = sigmoid.c1, b = c2)  # right sigmoid gives evidence of dup suspicius ht > reduces score
-  } else {
-    c2 <- sigmoid.c2.vector[6]
-    score <- - pracma::sigmoid(freq + (c2 - freq)*2 , a = sigmoid.c1, b = c2)  # extreme right sigmoid gives evidence of dup suspicius ht > reduces score
-  }
-
-  return(score)
 }
