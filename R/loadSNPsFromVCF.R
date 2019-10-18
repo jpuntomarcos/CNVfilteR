@@ -38,6 +38,7 @@
 #' @importFrom GenomeInfoDb seqlevelsStyle
 #' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom Rsamtools TabixFile headerTabix
+#' @importFrom methods is
 #' @importFrom IRanges reduce
 #' @importFrom GenomicRanges mcols seqnames
 #' @importFrom SummarizedExperiment rowRanges
@@ -53,7 +54,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   assertthat::assert_that(assertthat::is.string(ref.support.field) || is.null(ref.support.field))
   assertthat::assert_that(assertthat::is.string(alt.support.field) || is.null(alt.support.field))
   assertthat::assert_that(assertthat::is.string(list.support.field) || is.null(list.support.field))
-  assertthat::assert_that(is(regions.to.filter, "GRanges") || is.null(regions.to.filter))
+  assertthat::assert_that(methods::is(regions.to.filter, "GRanges") || is.null(regions.to.filter))
   assertthat::assert_that(assertthat::is.string(genome))
   assertthat::assert_that(is.logical(exclude.non.canonical.chrs))
   assertthat::assert_that(is.logical(verbose))

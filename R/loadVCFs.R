@@ -54,6 +54,7 @@
 #' @importFrom IRanges subsetByOverlaps
 #' @importFrom GenomicRanges mcols
 #' @importFrom Biostrings width
+#' @importFrom methods is
 #' @importFrom Rsamtools indexTabix bgzip
 #' @export loadVCFs
 #'
@@ -66,9 +67,9 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
   # Check input
   assertthat::assert_that(is.character(vcf.files))
   assertthat::assert_that(is.null(sample.names) || (is.character(sample.names) & length(vcf.files) == length(sample.names)) )
-  assertthat::assert_that(is(cnvs.gr, "GRanges"))
+  assertthat::assert_that(methods::is(cnvs.gr, "GRanges"))
   assertthat::assert_that(assertthat::is.number(min.total.depth))
-  assertthat::assert_that(is(regions.to.exclude, "GRanges") || is.null(regions.to.exclude))
+  assertthat::assert_that(methods::is(regions.to.exclude, "GRanges") || is.null(regions.to.exclude))
   assertthat::assert_that(assertthat::is.string(vcf.source) || is.null(vcf.source))
   assertthat::assert_that(assertthat::is.string(ref.support.field) || is.null(ref.support.field))
   assertthat::assert_that(assertthat::is.string(alt.support.field) || is.null(alt.support.field))
@@ -189,9 +190,9 @@ auxProcessVariants <- function(vars, cnvGR, heterozygous.range, homozygous.range
     mcolumns$type <- ""
     for (i in seq_len(nrow(mcolumns))){
       v <- mcolumns[i,]
-      if (v$alt.freq >= heterozygous.range[1] & v$alt.freq <= heterozygous.range[2]) {
+      if (v$alt.freq > heterozygous.range[1] & v$alt.freq < heterozygous.range[2]) {
         mcolumns[i,"type"] <- "ht"
-      } else if (v$alt.freq >= homozygous.range[1] & v$alt.freq <= homozygous.range[2]){
+      } else if (v$alt.freq > homozygous.range[1] & v$alt.freq < homozygous.range[2]){
         mcolumns[i,"type"] <- "hm"
       }
     }

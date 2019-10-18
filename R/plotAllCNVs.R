@@ -22,11 +22,12 @@
 #' @importFrom CopyNumberPlots plotCopyNumberCalls
 #' @importFrom karyoploteR plotKaryotype
 #' @importFrom graphics legend
+#' @importFrom methods is
 #' @export plotAllCNVs
 #'
 plotAllCNVs <- function(cnvs.gr){
 
-  assertthat::assert_that(is(cnvs.gr, "GRanges"))
+  assertthat::assert_that(methods::is(cnvs.gr, "GRanges"))
 
   # Add cn column (required by CopyNumberPlots)
   cnvs.gr <- auxAddCNcolumn(cnvs.gr)
