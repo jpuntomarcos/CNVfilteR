@@ -24,10 +24,12 @@
 #' @param verbose Whether to show information messages. (Defaults to TRUE)
 #'
 #' @return A list where names are sample names, and values are \code{GRanges} objects containing the variants for each sample, including the following metadata columns:
-#'   - \code{ref.support}: Reference allele depth field
-#'   - \code{alt.support}: Alternative allele depth field
-#'   - \code{alt.freq}: allelic frequency
-#'   - \code{total.depth}: total depth
+#' \itemize{
+#'  \item \code{ref.support}: Reference allele depth field
+#'  \item \code{alt.support}: Alternative allele depth field
+#'  \item \code{alt.freq}: allelic frequency
+#'  \item \code{total.depth}: total depth
+#' }
 #'
 #' @examples
 #' vcf.file <- system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE)

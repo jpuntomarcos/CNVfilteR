@@ -41,8 +41,10 @@ loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
 }
 \value{
 A \code{GRanges} with a range per each CNV and the metadata columns:
- - \code{cnv}: type of CNV, "duplication" or "deletion"
- - \code{sample}: sample name
+\itemize{
+ \item \code{cnv}: type of CNV, "duplication" or "deletion"
+ \item \code{sample}: sample name
+}
 }
 \description{
 Loads CNV calls from a csv/tsv file

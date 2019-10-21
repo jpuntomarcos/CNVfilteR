@@ -24,8 +24,10 @@
 #' @param exclude.non.canonical.chrs Whether to exclude non canonical chromosomes (Defaults to TRUE)
 #'
 #' @return A \code{GRanges} with a range per each CNV and the metadata columns:
-#'  - \code{cnv}: type of CNV, "duplication" or "deletion"
-#'  - \code{sample}: sample name
+#' \itemize{
+#'  \item \code{cnv}: type of CNV, "duplication" or "deletion"
+#'  \item \code{sample}: sample name
+#' }
 #'
 #' @examples
 #' # Load CNVs data

@@ -30,10 +30,12 @@ loadSNPsFromVCF(vcf.file, vcf.source = NULL, ref.support.field = NULL,
 }
 \value{
 A list where names are sample names, and values are \code{GRanges} objects containing the variants for each sample, including the following metadata columns:
-  - \code{ref.support}: Reference allele depth field
-  - \code{alt.support}: Alternative allele depth field
-  - \code{alt.freq}: allelic frequency
-  - \code{total.depth}: total depth
+\itemize{
+ \item \code{ref.support}: Reference allele depth field
+ \item \code{alt.support}: Alternative allele depth field
+ \item \code{alt.freq}: allelic frequency
+ \item \code{total.depth}: total depth
+}
 }
 \description{
 Loads SNPs (SNVs/indels) from a VCF file

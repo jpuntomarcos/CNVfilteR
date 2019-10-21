@@ -33,16 +33,20 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
 }
 \value{
 A S3 object with 3 elements:
- - \code{cnvs}: \code{GRanges} with the input CNVs and the meta-columns added during the call:
-   - \code{filter}: Set to TRUE if the CNV can be filtered
-   - \code{n.total.variants}: Number of variants matching the CNV
-   - \code{n.hm.variants}: Number of homozygous variants. They do not give any evidenced for confirming or discarding the CNV.
-   - \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
-   - \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
-   - \code{score}: total score when computing all the variants scores
-   - \code{cnv.id}: CNV id
- - \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
- - \code{filterParameters}: input parameters used for filtering
+\itemize{
+\item \code{cnvs}: \code{GRanges} with the input CNVs and the meta-columns added during the call:
+  \itemize{
+   \item \code{filter}: Set to TRUE if the CNV can be filtered
+   \item \code{n.total.variants}: Number of variants matching the CNV
+   \item \code{n.hm.variants}: Number of homozygous variants. They do not give any evidenced for confirming or discarding the CNV.
+   \item \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
+   \item \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
+   \item \code{score}: total score when computing all the variants scores
+   \item \code{cnv.id}: CNV id
+  }
+\item \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
+\item \code{filterParameters}: input parameters used for filtering
+}
 }
 \description{
 Identifies those copy number calls that can be filtered
