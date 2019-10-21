@@ -1,5 +1,5 @@
 ---
-title: "CNVfilteR: Remove false positives of any CNV calling tool by using SNVs calls "
+title: "CNVfilteR: Remove false positives of any CNV calling tools by using SNV calls "
 author: "Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> "
 date: "`r doc_date()`"
 package: "`r pkg_ver('CNVfilteR')`"
@@ -15,8 +15,8 @@ vignette: >
 ```{r, include=FALSE}
 library(knitr)
 opts_chunk$set(concordance=FALSE)
-knitr::opts_chunk$set(fig.width = 7)
-knitr::opts_chunk$set(fig.height = 7)
+knitr::opts_chunk$set(fig.width = 8)
+knitr::opts_chunk$set(fig.height = 5)
 set.seed(21666641)
 ```
 
@@ -34,8 +34,11 @@ With the aim of reducing the number of false positives,
 This task is performed by using the single nucleotide variant (SNV) calls that are usually 
 obtained in common NGS pipelines. As VCF field interpretation is key when working
 with these files, `r BiocStyle::Biocpkg("CNVfilteR")` specifically supports 
-VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller, and
-UnifiedGenotyper.
+VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller (GATK),
+and UnifiedGenotyper (GATK). Additionally, results can be plotted using the 
+functions provided by the R/Bioconductor packages
+[karyoploteR](http://bioconductor.org/packages/karyoploteR/) and 
+[CopyNumberPlots](http://bioconductor.org/packages/CopyNumberPlots/).
 
 
 
@@ -63,8 +66,10 @@ Bioconductor**.
 
 # Quick Start
 
-Below we show a full example that covers from data loading to results plotting.
-First, we load some CNV tool results:
+Below we show a full example that covers the usual steps: CNVs data loading,
+variants loading, identifying false postives and plotting the results.
+
+First, we can load some CNV tool results:
 ```{r message=FALSE}
 library(CNVfilteR)
 
@@ -85,7 +90,7 @@ were selected and allele frequency consequently. Now we can call
 
 ```{r message=FALSE }
 results <- filterCNVs(cnvs.gr, vcfs)
-results
+names(results)
 ```
 
 And we can check those CNVs that can be filtered out:
@@ -94,9 +99,9 @@ And we can check those CNVs that can be filtered out:
 results$cnvs[results$cnvs$filter == TRUE]
 ```
 
-As an example, we can observe that the CNV with **cnv.id**=3 has 4 variants matching 
-it: 2 in favor of discarding it, two against discarding it. If we want to know
-more about the variants matching a certain CNV we can do:
+As an example, we can observe that the CNV with `cnv.id`=3 has 4 variants 
+matching it: 2 in favor of discarding it, two against discarding it. If we want 
+to know more about the variants matching a certain CNV we can do:
 ```{r}
 results$variantsForEachCNV[["3"]]
 ```
@@ -108,18 +113,19 @@ they obtain a low negative score. All these default values and others can
 be modified in the `filterCNVs()` function.
 
 Finally, we may be interested in plotting the results. For example, we can
-plot easily the duplication CNV with **cnv.id**=3 and all the variants matching it.
+plot easily the duplication CNV with `cnv.id`=3 and all the variants matching
+it.
 
-```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
+```{r, fig.wide=TRUE}
 plotVariantsForCNV(results, "3")
 ```
 
-We can do the same to plot the deletion CNV with **cnv.id**=19, where all variants
-discard the CNV except one homozygous variant that does not give us any 
+We can do the same to plot the deletion CNV with `cnv.id`=19, where all 
+variants discard the CNV except one homozygous variant that does not give us any 
 information for supporting or discarding the CNV:
 
-```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
-plotVariantsForCNV(results, "19")
+```{r, fig.wide=TRUE}
+plotVariantsForCNV(results, "19", )
 ```
 
 
@@ -128,7 +134,7 @@ On the opposite side, we can observe those CNVs that cannot be discarded:
 results$cnvs[results$cnvs$filter != TRUE]
 ```
 
-For example, the CNV with **cnv.id**=14 has one variant matching it. If we get
+For example, the CNV with `cnv.id`=14 has one variant matching it. If we get
 the variant info, we see that the variant has an allele frequency very close to
 the default expected duplication value, 0.66.
 
@@ -136,16 +142,279 @@ the default expected duplication value, 0.66.
 results$variantsForEachCNV[["14"]]
 ```
 
-So, no evidence was found for discarding the CNV. We can also plot the CNV and the variant:
-```{r, fig.width=8, fig.height=4, fig.wide=TRUE}
-plotVariantsForCNV(results, "14")
+So, no evidence was found for discarding the CNV. We can also plot the CNV and 
+the variant:
+```{r, fig.wide=TRUE}
+plotVariantsForCNV(results, "3")
 ```
 
 
 
+
+# Loading Copy-Number Data
+
+`r BiocStyle::Biocpkg("CNVfilteR")` functions expect CNVs calls to be a
+`GRanges` object with a few specificic metadata columns: 
+
+* **cnv** for storing the CNV type: duplication or deletion.
+* **sample** for storing the sample name of the CNV.
+  
+You can create this object yourself, but 
+`r BiocStyle::Biocpkg("CNVfilter")` provides the proper function to do this, 
+`loadCNVcalls()`. This function can interpret any tsv o csv file by indicating
+which columns store the information. For example, in the following code, the
+`chr.column` column is stored in the "Chromosome" column of the `cnvs.file`.
+```{r message=FALSE}
+
+cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
+cnvs.gr <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample", genome = "hg19")
+
+```
+
+`loadCNVcalls()` can interpret different types of CNVs. Among other options, 
+separator can be selected using the `sep` parameter (defaults to *\\t*),
+and first lines can be skipped using the `skip` parameter (defaults to 0). Also,
+the value used in `cnv.column` to store the CNV type can be modified
+using the `deletion` and `duplication` parameters (defaults to "deletion" and 
+"duplication", respectively). If, for example, our `cnv.column` uses "CN1" and
+"CN3" for deletion and duplication (respectively), we should indicate 
+the function to use these values:
+```{r eval=FALSE}
+cnvs.gr.2 <- loadCNVcalls(cnvs.file = cnvs.file.2, deletion = "CN1", duplication = "CN3", chr.column = "Chromosome", start.column = "Start", end.column = "End", cnv.column = "CNV.type", sample.column = "Sample")
+```
+
+
+Some CNV tools generate results where the CNV location is stored in a single
+column with the format *chr:start-end* (i.e. *1:538001-540000*). In this
+case, we can call `loadCNVcalls()` using the `coord.column` instead of the 
+`chr.column`, `start.column` and `end.column` columns.
+
+
+
+# Loading Variants Data
+
+Common NGS pipelines produce variant calling (SNVs or INDELs) in a VCF file.
+However, VCF interpretation is 
+challenging due to the flexibility provided by the VCF format definition. 
+It is not straightforward to interpret correctly the fields in the VCF file 
+and compute the allele frequency. `loadVCFs()` interprets automatically 
+VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller (GATK),
+and UnifiedGenotyper (GATK).
+
+In the following example the function recognizes VarScan2 as the source.
+```{r }
+vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
+               system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
+vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
+```
+
+We can also load the VCF file spicifying how to interpret it, which can be
+useful if the VCF was generated by a caller not supported by 
+`r BiocStyle::Biocpkg("CNVfilteR")`. For example we can specify the ref/alt 
+fields:
+```{r }
+vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr, vcf.source = "MyCaller", ref.support.field = "RD", alt.support.field = "AD")
+```
+
+Alternatively, we can set the `list.support.field` parameter so that field
+will be loaded assuming that it is a list in this order: reference allele, 
+alternative allele. As an example:
+```{r}
+vcf.file3 <- c(system.file("extdata", "variants.sample3.vcf", package = "CNVfilteR", mustWork = TRUE))
+vcfs3 <- loadVCFs(vcf.file3, cnvs.gr = cnvs.gr, vcf.source = "MyCaller", list.support.field = "AD")
+```
+
+## VCF free of artifacts
+
+As VCF will be used for determining if a CNV can be filtered out, it is
+recommended to use a VCF file free of artifacts to improve the accuracy
+when identifying those CNVs. `loadVCFs` will load only 
+variants with a minimum total depth
+greater than `min.total.depth` (defaults to 30). Additionally, we can exclude
+those regions that have already known artifacts with the parameter 
+`regions.to.exclude`. In this example, we exclude PMS2, PRSS1, and
+FANCD2 genes because they are pseudogenes with alignments artifacts:
+```{r}
+regions.to.exclude <- GRanges(seqnames = c("chr3","chr7", "chr7"), ranges = IRanges(c(10068098, 6012870, 142457319), c(10143614, 6048756, 142460923)))
+vcfs4 <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr, regions.to.exclude = regions.to.exclude)
+```
+
+Also, the parameter `exclude.indels` indicates whether to exclude INDELs when 
+loading the variants. TRUE is the default and **recommended** value given 
+that INDELs allele frequency varies differently than SNVs. Including
+INDELs may allow the algorithm to identify more CNVs to discard with a greater
+risk of identifying them wrongly.
+
+
+## Other settings
+
+The function `loadVCFs()` also adapts to different needs. If `sample.names` parameter is
+not provided, the sample names included in the VCF itself will be used. 
+Both single-sample and multi-sample VCFs are accepted, but when 
+multi-sample VCFs are used, `sample.names` parameter must be NULL.
+
+If VCF is not compressed with bgzip, the function compresses it and generates
+the .gz file. If .tbi file does not exist for a given VCF file, the function
+also generates it. All files are generated in a temporary folder.
+
+See `loadVCFs()` documentation to see other parameters info.
+
+
+
+# Identifying false positives
+
+The task of identifying false positives is performed by the `filterCNVs()`
+function. It checks all the variants (SNVs and optionally INDELs) matching
+each CNV present in `cnvs.gr` to identify those CNVs that can be filtered. It
+returns an S3 object with 3 elements: `cnvs`, `variantsForEachCNV` and 
+`filterParameters`:
+
+```{r}
+results <- filterCNVs(cnvs.gr, vcfs)
+tail(results$cnvs)
+```
+
+
+Observe that **those CNVs that can be filtered have the value TRUE in the 
+column `filter`**. `r BiocStyle::Biocpkg("CNVfilteR")` employs two
+different strategies for identifying those CNVs:
+
+ * A **deletion CNV** can be filtered if there is at least 
+ `ht.deletions.threshold`% of heterozygous variants matching
+ the CNV. Default `ht.deletions.threshold` value is 15, so 15% is required.
+ * A **duplication CNV** can be filtered if the total `score` is >= 
+ `dup.threshold.score` after computing all 
+ heterozygous variants matching that CNV. Default `dup.threshold.score` value
+ is 0.5. How the score is computed for each variant is explained in 
+ the next section.
+
+
+## Scoring model for duplication CNVs 
+
+The scoring model for determining whether a certain duplication CNV can be 
+discarded
+is based on the allele frequency for each heterozygous variant matching
+that CNV:
+
+ * In common conditions with no presence of a duplication CNV, the allele 
+ frequency of a heterozygous variant is expected to be close to 50% 
+ (`expected.ht.mean`). So, a variant with an allele frequency close to 50%
+ gives us evidence of the non-existence of a duplication CNV, so the CNV could 
+ be discarded.
+ * On the opposite side, if the variant occurs in the same region of a 
+certain duplication CNV, the allele frequency is expected to be close to 33.3%
+(`expected.dup.ht.mean1`) when the variant **is not** in the same allele 
+ than the duplication CNV, and 66.6% (`expected.dup.ht.mean2`) when the variant 
+ **is** in the same allele than 
+ the duplication CNV call. So, a variant with an allele frequency close to 
+ 33.3% or 66.6% gives us evidence of the existence of duplication CNV.
+
+
+
+Although we can expect that most of the variants are close to the expected means
+(33.3%, 50%, and 66.6%), many of them can be far from any expected mean. The 
+scoring model implemented in the `filterCNVs()` function measures
+the evidence - for discarding a certain CNV - using
+a scoring model. The scoring model is based on the fuzzy logic, where elements 
+can have any value between 1 (True) and 0 (False). Following this idea, 
+**each variant will be scored with a value between 0 and 1 depending on 
+how close is the allele frequency to the nearest expected mean**. 
+
+ * For those variants with an allele frequency close to the expected mean when
+ no duplication CNV occurs (defaults 50%),
+ the score will be positive in the interval [0, 1].
+ * For those variants with an allele frequency close to the expected mean when
+ a duplication CNV occurs (defaults 33.3%, 66.6%), the score will be negative 
+ in the interval [-1, 0].
+
+The total `score` is computed among all the variants matching the CNV. If the 
+`score` is greater than the `dup.threshold.score`, the CNV can be discarded.
+
+A common way of applying the fuzzy logic is using the sigmoid function. 
+CNVfilteR uses the sigmoid function implemented in the
+[pracma](https://cran.r-project.org/web/packages/pracma/index.html) package, 
+which is defined as
+$$
+\begin{aligned}
+ y = 1/(1 + e^{-c1(x−c2)})
+\end{aligned}
+$$
+
+The scoring model is built on 6 sigmoids defined on 6 different intervals. The
+c1 parameter is 2 by default (`sigmoid.c1`), and the c2 parameter 
+is defined for the 6 sigmoids (`sigmoid.c2.vector`).
+
+ * First sigmoid: interval [20, `expected.dup.ht.mean1`], c2=28
+ * Second sigmoid: interval [`expected.dup.ht.mean1`, `sigmoid.int1`], c2=38.3
+ * Third sigmoid: interval [`sigmoid.int1`, `expected.ht.mean`], c2=44.7
+ * Fourth sigmoid: interval [`expected.ht.mean`, `sigmoid.int2`], c2=55.3
+ * Fifth sigmoid: interval [`sigmoid.int2`, `expected.dup.ht.mean2`], c`=61.3
+ * Sixth sigmoid: interval [`expected.dup.ht.mean2`, 80], c2=71.3
+ 
+Where `sigmoid.int1` is the mean between `expected.dup.ht.mean1` and 
+`expected.ht.mean`, and `sigmoid.int2` is the mean between 
+`expected.dup.ht.mean2` and `expected.ht.mean`.
+ 
+The scoring model can be plotted using the `plotScoringModel()` function.
+```{r, fig.height=6, fig.wide=TRUE}
+p <- results$filterParameters
+plotScoringModel(expected.ht.mean = p$expected.ht.mean, 
+                 expected.dup.ht.mean1 = p$expected.dup.ht.mean1,
+                 expected.dup.ht.mean2 = p$expected.dup.ht.mean2,
+                 sigmoid.c1 = p$sigmoid.c1, 
+                 sigmoid.c2.vector = p$sigmoid.c2.vector)
+
+```
+
+And the scoring model can be modified when calling the `filterCNVs()` function. 
+Let's see how the model changes when we modify the parameter `sigmoid.c1` 
+(1 instead of 2): 
+```{r, fig.height=6, fig.wide=TRUE}
+plotScoringModel(expected.ht.mean = p$expected.ht.mean, 
+                 expected.dup.ht.mean1 = p$expected.dup.ht.mean1,
+                 expected.dup.ht.mean2 = p$expected.dup.ht.mean2,
+                 sigmoid.c1 = 1, 
+                 sigmoid.c2.vector = p$sigmoid.c2.vector)
+```
+
+We can also modify the `sigmoid.c2.vector` parameter for each sigmoid function. For example, to 
+make the central sigmoids narrower:
+```{r, fig.height=6, fig.wide=TRUE}
+plotScoringModel(expected.ht.mean = p$expected.ht.mean, 
+                 expected.dup.ht.mean1 = p$expected.dup.ht.mean1,
+                 expected.dup.ht.mean2 = p$expected.dup.ht.mean2,
+                 sigmoid.c1 = p$sigmoid.c1, 
+                 sigmoid.c2.vector = c(28, 38.3, 46.7, 53.3, 61.3, 71.3))
+```
+
+
+# Plotting results
+
+We can plot easily a certain CNV and its matching variants. For example,  the 
+duplication CNV with `cnv.id`=17 can be plotted as follows:
+```{r, fig.wide=TRUE}
+plotVariantsForCNV(results, "17")
+```
+
+Some parameters can be customized, like `points.cex` and `points.pch`. It is 
+also possible to plot all CNVs in a global schema where all the chromosomes are
+plotted:
+```{r, fig.width=8, fig.height=8, fig.wide=TRUE}
+cnvs.file <- system.file("extdata", "DECoN.CNVcalls.2.csv",
+                         package = "CNVfilteR", mustWork = TRUE)
+cnvs.gr.2 <- loadCNVcalls(cnvs.file = cnvs.file, chr.column = "Chromosome",
+                          start.column = "Start", end.column = "End", 
+                          cnv.column = "CNV.type", sample.column = "Sample",
+                          genome = "hg19")
+plotAllCNVs(cnvs.gr.2)
+```
+
+Note that if a CNV is too small, it will not be visible when calling 
+`plotAllCNVs()`.
 
 
 # Session Info
 ```{r}
   sessionInfo()
 ```
+  
