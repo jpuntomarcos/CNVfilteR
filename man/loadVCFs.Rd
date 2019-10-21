@@ -63,7 +63,7 @@ the .gz file. If .tbi file does not exist for a given VCF file, the function
 also generates it. All files are generated in a temporary folder.
 }
 \note{
-**Important:** Compressed VCF must be compressed with
+Important: Compressed VCF must be compressed with
 [bgzip ("block gzip") from Samtools htslib](http://www.htslib.org/doc/bgzip.html)
 and not using the standard Gzip utility.
 }
