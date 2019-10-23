@@ -28,5 +28,5 @@ provided by the R/Bioconductor packages
 
 ## How to use it
 
-Documentation ([vignette](http://bioconductor.org/packages/devel/bioc/vignettes/CNVfilteR/inst/doc/CNVfilteR.pdf) and [user manual](http://bioconductor.org/packages/devel/bioc/manuals/CNVfilteR/man/CNVfilteR.pdf)) are available at the [CNVfilteR](http://bioconductor.org/packages/CNVfilteR) 
+Documentation ([vignette](http://bioconductor.org/packages/devel/bioc/vignettes/CNVfilteR/inst/doc/CNVfilteR.html) and [user manual](http://bioconductor.org/packages/devel/bioc/manuals/CNVfilteR/man/CNVfilteR.pdf)) are available at the [CNVfilteR](http://bioconductor.org/packages/CNVfilteR) 
 Bioconductor site, allow with instructions to install it.
