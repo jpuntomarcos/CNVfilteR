@@ -221,7 +221,23 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 #' @importFrom utils str
 #'
 auxGetVcfSource <- function(vcf.source = NULL, vcf.file){
-  vcf.header <- VariantAnnotation::scanVcfHeader(vcf.file)
+
+  # Call scanVcfHeader() but controlling if knwon error occurs
+  tryCatch(
+    {
+      vcf.header <- VariantAnnotation::scanVcfHeader(vcf.file)
+    },
+    error = function(cond){
+      if (cond$message == "subscript out of bounds"){
+        stop(paste0("There was an error when calling scanVcfHeader() with vcf.file=",
+                   vcf.file, ": \"", cond$message,
+                   "\". It's probably due to a VCF file with no variants."))
+      } else {
+        stop(cond$message)
+      }
+    }
+  )
+
   vcf.header.meta <- VariantAnnotation::meta(vcf.header)
 
   # Get VCF source if necessary
