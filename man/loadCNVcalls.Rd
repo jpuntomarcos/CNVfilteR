@@ -5,9 +5,10 @@
 \title{loadCNVcalls}
 \usage{
 loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
-  coord.column = NULL, cnv.column, sample.column, gene.column = NULL,
-  deletion = "deletion", duplication = "duplication", sep = "\\t",
-  skip = 0, genome = "hg19", exclude.non.canonical.chrs = TRUE)
+  coord.column = NULL, cnv.column, sample.column, sample.name = NULL,
+  gene.column = NULL, deletion = "deletion",
+  duplication = "duplication", sep = "\\t", skip = 0,
+  genome = "hg19", exclude.non.canonical.chrs = TRUE)
 }
 \arguments{
 \item{cnvs.file}{Path to csv/tsv file containing the CNV calls.}
@@ -24,6 +25,8 @@ loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
 \item{cnv.column}{Which column stores the type of CNV (deletion or duplication).}
 
 \item{sample.column}{Which column stores the sample name.}
+
+\item{sample.name}{Sample name for all CNVs defined in \code{cnv.file}. If set, \code{sample.column} is ignored (Defaults to NULL)}
 
 \item{gene.column}{Which columns store the gene or genes affected (optional). (Defaults to NULL)}
 

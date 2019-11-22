@@ -15,6 +15,7 @@
 #' \code{start.column} and {end.column} columns will be used. (Defaults to NULL)
 #' @param cnv.column Which column stores the type of CNV (deletion or duplication).
 #' @param sample.column Which column stores the sample name.
+#' @param sample.name Sample name for all CNVs defined in \code{cnv.file}. If set, \code{sample.column} is ignored (Defaults to NULL)
 #' @param gene.column Which columns store the gene or genes affected (optional). (Defaults to NULL)
 #' @param deletion Text used in the \code{cnv.column} to represent deletion CNVs. (Defaults to "deletion")
 #' @param duplication Text used in the \code{cnv.column} to represent duplication CNVs. (Defaults to "duplication")
@@ -41,9 +42,12 @@
 #'
 #' @export loadCNVcalls
 #'
-loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.column = NULL, cnv.column, sample.column,
-                         gene.column = NULL, deletion = "deletion", duplication = "duplication",
-                         sep = "\t", skip = 0, genome = "hg19", exclude.non.canonical.chrs = TRUE){
+loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
+                         coord.column = NULL, cnv.column, sample.column,
+                         sample.name = NULL, gene.column = NULL,
+                         deletion = "deletion", duplication = "duplication",
+                         sep = "\t", skip = 0, genome = "hg19",
+                         exclude.non.canonical.chrs = TRUE){
 
   # intial vars
   CNV_DF_COLUMNS <- c("chr", "start", "end", "cnv", "sample")
@@ -57,8 +61,10 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
   } else {
     assertthat::assert_that(assertthat::is.string(coord.column))
   }
+  if (is.null(sample.name)){
+    assertthat::assert_that(assertthat::is.string(sample.column))
+  }
   assertthat::assert_that(assertthat::is.string(cnv.column))
-  assertthat::assert_that(assertthat::is.string(sample.column))
   assertthat::assert_that(assertthat::is.string(deletion))
   assertthat::assert_that(assertthat::is.string(duplication))
   assertthat::assert_that(assertthat::is.string(sep))
@@ -71,8 +77,6 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
 
   # Rename and select needed columns
   colnames(cnvs.df)[which(names(cnvs.df) == cnv.column)] <- "cnv"
-  colnames(cnvs.df)[which(names(cnvs.df) == sample.column)] <- "sample"
-
   if (is.null(coord.column)){
     colnames(cnvs.df)[which(names(cnvs.df) == chr.column)] <- "chr"
     colnames(cnvs.df)[which(names(cnvs.df) == start.column)] <- "start"
@@ -82,6 +86,13 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
     cnvs.df$chr <- parts[,1]
     cnvs.df$start <- parts[,2]
     cnvs.df$end <- parts[,3]
+  }
+
+  # Set sample name column
+  if (is.null(sample.name)){
+    colnames(cnvs.df)[which(names(cnvs.df) == sample.column)] <- "sample"
+  } else {
+    cnvs.df$sample <- sample.name
   }
 
   # Assert CNV type values are correct
