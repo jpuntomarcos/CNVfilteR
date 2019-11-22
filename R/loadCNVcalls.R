@@ -17,8 +17,8 @@
 #' @param sample.column Which column stores the sample name.
 #' @param sample.name Sample name for all CNVs defined in \code{cnv.file}. If set, \code{sample.column} is ignored (Defaults to NULL)
 #' @param gene.column Which columns store the gene or genes affected (optional). (Defaults to NULL)
-#' @param deletion Text used in the \code{cnv.column} to represent deletion CNVs. (Defaults to "deletion")
-#' @param duplication Text used in the \code{cnv.column} to represent duplication CNVs. (Defaults to "duplication")
+#' @param deletion Text used in the \code{cnv.column} to represent deletion CNVs. Multiple values are also allowed, for example: c("CN0", "CN1"). (Defaults to "deletion")
+#' @param duplication Text used in the \code{cnv.column} to represent duplication CNVs.  Multiple values are also allowed, for example: c("CN3", "CN4") (Defaults to "duplication")
 #' @param sep Separator symbol to load the csv/tsv file. (Defaults to "\\t")
 #' @param skip Number of rows that should be skipped when reading the csv/tsv file. (Defaults to 0)
 #' @param genome The name of the genome. (Defaults to "hg19")
@@ -65,8 +65,8 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
     assertthat::assert_that(assertthat::is.string(sample.column))
   }
   assertthat::assert_that(assertthat::is.string(cnv.column))
-  assertthat::assert_that(assertthat::is.string(deletion))
-  assertthat::assert_that(assertthat::is.string(duplication))
+  assertthat::assert_that(is.character(deletion))
+  assertthat::assert_that(is.character(duplication))
   assertthat::assert_that(assertthat::is.string(sep))
   assertthat::assert_that(assertthat::is.number(skip))
   assertthat::assert_that(assertthat::is.string(genome))
@@ -96,10 +96,11 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
   }
 
   # Assert CNV type values are correct
-  if(!setequal(unique(cnvs.df$cnv), c(deletion, duplication))){
+  cnvValuesCheck <- unique(cnvs.df$cnv) %in%  c(deletion, duplication)
+  if(!identical(unique(cnvValuesCheck), TRUE)) {
     stop(paste0("Values found in ", cnv.column, " column are [",
                toString(unique(cnvs.df$cnv)), "] but expected values are '",
-               deletion, "' and '", duplication,
+               toString(c(deletion, duplication)),
                "'. Please, use the duplication and deletion parameters to select the expected values for the ",
                cnv.column ," column"))
   }
@@ -115,8 +116,8 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
   cnvs.df <- cnvs.df[, CNV_DF_COLUMNS]
 
   # reassing deletion / duplication text values
-  cnvs.df[cnvs.df$cnv == deletion, "cnv"] <- "deletion"
-  cnvs.df[cnvs.df$cnv == duplication, "cnv"] <- "duplication"
+  cnvs.df[cnvs.df$cnv %in% deletion, "cnv"] <- "deletion"
+  cnvs.df[cnvs.df$cnv %in% duplication, "cnv"] <- "duplication"
 
   # Transform to GRanges
   cnvs.gr <- regioneR::toGRanges(cnvs.df, genome = genome)

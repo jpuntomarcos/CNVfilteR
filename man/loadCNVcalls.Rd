@@ -30,9 +30,9 @@ loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
 
 \item{gene.column}{Which columns store the gene or genes affected (optional). (Defaults to NULL)}
 
-\item{deletion}{Text used in the \code{cnv.column} to represent deletion CNVs. (Defaults to "deletion")}
+\item{deletion}{Text used in the \code{cnv.column} to represent deletion CNVs. Multiple values are also allowed, for example: c("CN0", "CN1"). (Defaults to "deletion")}
 
-\item{duplication}{Text used in the \code{cnv.column} to represent duplication CNVs. (Defaults to "duplication")}
+\item{duplication}{Text used in the \code{cnv.column} to represent duplication CNVs.  Multiple values are also allowed, for example: c("CN3", "CN4") (Defaults to "duplication")}
 
 \item{sep}{Separator symbol to load the csv/tsv file. (Defaults to "\\t")}
 
