@@ -166,7 +166,6 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
             message(paste0("CNV duplication at ", toString(cnvs.gr[i]) ,
                            " for sample ", cnvs.gr[i]$sample,
                            " can be filtered, score: ", round(total.score, 4)))
-            message(matchingVariants)
           }
         }
 
