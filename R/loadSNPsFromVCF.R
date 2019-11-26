@@ -100,10 +100,22 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     if (is.null(ref.support.field)) ref.support.field <- "RD"
     if (is.null(alt.support.field)) alt.support.field <- "AD"
     msg <- paste(msg, ref.support.field, "will be used as ref allele depth field,", alt.support.field, "will be used as alt allele depth field.")
-  } else if (vcf.source %in% c("strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper") | !(is.null(list.support.field)) ) {
-    if (!is.null(list.support.field)) ref.support.field <- alt.support.field <- list.support.field <- "AD"
-    support.field.is.list <- TRUE
+  } else if (vcf.source %in% c("strelka", "freeBayes", "HaplotypeCaller", "UnifiedGenotyper"))  {
+    if (is.null(list.support.field))
+      list.support.field <- "AD"
     msg <- paste(msg, list.support.field, "will be used as allele support field in a list format: ref allele, alt allele.")
+  }
+
+  # Set support.field.is.list
+  if (!is.null(list.support.field)){
+    support.field.is.list <- TRUE
+  }
+
+  # set genoField
+  if (is.null(ref.support.field)){
+    genoField <- list.support.field
+  } else {
+    genoField <- c(ref.support.field, alt.support.field)
   }
 
   if (verbose) message(msg)
@@ -131,18 +143,19 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     regions.to.filter <- regions.to.filter[as.character(GenomicRanges::seqnames(regions.to.filter)) %in% availableSeqs]
 
     # create ScanVcfParam
-    scan.vcf.param <- ScanVcfParam(info=NA, geno = c(alt.support.field, ref.support.field), which = regions.to.filter)
+    scan.vcf.param <- VariantAnnotation::ScanVcfParam(info=NA, geno = genoField, which = regions.to.filter)
 
   } else {
-    scan.vcf.param <- ScanVcfParam(info=NA, geno = c(alt.support.field, ref.support.field))
+    scan.vcf.param <- VariantAnnotation::ScanVcfParam(info=NA, geno = genoField)
   }
 
 
   # load variants
-  vars <- readVcf(file=Rsamtools::TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
+  vars <- VariantAnnotation::readVcf(file=Rsamtools::TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
   if (length(vars) > 0) {
     GenomeInfoDb::seqlevelsStyle(vars) <- "UCSC"
   }
+
 
   # process each sample
   samples <- colnames(vars)
@@ -153,7 +166,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     if (support.field.is.list) {
 
       # Get alt depth
-      depths.list <- geno(v)[[alt.support.field]]
+      depths.list <- VariantAnnotation::geno(v)[[list.support.field]]
 
       # process it expecting 4 or 2 items
       if (ref.and.forward.fields) {
@@ -173,20 +186,19 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
       depths.ref <- geno(v)[[ref.support.field]]
     }
 
-
     # calculate allelic freq
     freqs.alt <- round(depths.alt / (depths.alt + depths.ref) * 100, 4)
-    freqs.alt[is.nan(freqs.alt)] <- NA
+    freqs.alt[is.nan(freqs.alt)] <- 0
 
     # calculate total depth
     total.depth <- depths.alt + depths.ref
 
-
     #Build the GRanges
-    ref <- ref(v)
-    alt <- unlist(alt(v))
-    if(length(ref) != length(alt))
+    ref <- VariantAnnotation::ref(v)
+    alt <- unlist(VariantAnnotation::alt(v))
+    if(length(ref) != length(alt)) {
       stop("Multiple alt fields are not supported.")
+    }
     v <- SummarizedExperiment::rowRanges(v)
     mdata <- data.frame(ref = ref, alt = alt, ref.support = as.vector(depths.ref), alt.support = as.vector(depths.alt),
                         alt.freq = as.vector(freqs.alt), total.depth = as.vector(total.depth))
