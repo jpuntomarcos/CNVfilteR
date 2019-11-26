@@ -190,11 +190,17 @@ auxProcessVariants <- function(vars, cnvGR, heterozygous.range, homozygous.range
     mcolumns$type <- ""
     for (i in seq_len(nrow(mcolumns))){
       v <- mcolumns[i,]
-      if (v$alt.freq > heterozygous.range[1] & v$alt.freq < heterozygous.range[2]) {
-        mcolumns[i,"type"] <- "ht"
-      } else if (v$alt.freq > homozygous.range[1] & v$alt.freq < homozygous.range[2]){
-        mcolumns[i,"type"] <- "hm"
+
+      if (is.numeric(v$alt.freq)){
+        if (v$alt.freq > heterozygous.range[1] & v$alt.freq < heterozygous.range[2]) {
+          mcolumns[i,"type"] <- "ht"
+        } else if (v$alt.freq > homozygous.range[1] & v$alt.freq < homozygous.range[2]){
+          mcolumns[i,"type"] <- "hm"
+        }
+      } else {
+        stop(paste("Allele frequency value is not numeric: ", v$alt.freq))
       }
+
     }
 
     # set meta-columns
