@@ -4,9 +4,16 @@
 \alias{getVariantScore}
 \title{getVariantScore}
 \usage{
-getVariantScore(freq, expected.ht.mean, expected.dup.ht.mean1,
-  expected.dup.ht.mean2, sigmoid.c1, sigmoid.c2.vector, sigmoid.int1,
-  sigmoid.int2)
+getVariantScore(
+  freq,
+  expected.ht.mean,
+  expected.dup.ht.mean1,
+  expected.dup.ht.mean2,
+  sigmoid.c1,
+  sigmoid.c2.vector,
+  sigmoid.int1,
+  sigmoid.int2
+)
 }
 \arguments{
 \item{freq}{Variant allele frequency}
