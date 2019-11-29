@@ -1,0 +1,24 @@
+Changes in version 1.1.3
+-------------------------
+
+BUG FIXES
+
+    o Fixed bug when processing variants in the limits of heterozygous.range and heterozygous.range
+
+
+
+
+Changes in version 1.1.2
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Added sample.name parameter to loadCNVcalls() function to allow explicitly setting sample name
+    o deletion and duplication parameters can be vectors in loadCNVcalls() function, so multiple values are allowed
+
+
+BUG FIXES
+    o Fixed bug happening in loadSNPsFromVCF() when ref and alt support was 0
+    o Fixed bug when processing list.support.field in loadSNPsFromVCF()
+    o Added error control when allele frequency is not numeric
+    o Minor fixes
