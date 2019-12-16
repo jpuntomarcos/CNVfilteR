@@ -193,7 +193,7 @@ auxProcessVariants <- function(vars, cnvGR, heterozygous.range, homozygous.range
     mcolumns[mcolumns$alt.freq >= homozygous.range[1] & mcolumns$alt.freq <= homozygous.range[2], "type"] <- "hm"
 
     # set meta-columns
-    GenomicRanges::mcols(vars) <- DataFrame(mcolumns)
+    GenomicRanges::mcols(vars) <- as.data.frame(mcolumns)
 
     # retag as overlap_indel those SNV variants overlapped by an indel. Those variant will no be used in analysis
     snvs <- vars[!vars$indel,]
