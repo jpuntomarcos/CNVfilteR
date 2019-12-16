@@ -56,12 +56,6 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
   # Get filter params values for later use
   params <- cnvfilter.results$filterParameters
 
-  # Load variants for desired cnv
-  vars <- cnvfilter.results$variantsForEachCNV[[cnv.id]]
-
-  # Move freq values to the 0-1 interval
-  vars$alt.freq <- vars$alt.freq / 100.0
-
   # Add cn column (required by CopyNumberPlots)
   cnvs.gr <- auxAddCNcolumn(cnvfilter.results$cnvs)
   cnv <- cnvs.gr[cnvs.gr$cnv.id == cnv.id,]
@@ -126,19 +120,27 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
         fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2, cex = 0.8,
         bty="l")
 
-  # Add points depending o CNV type
-  if (cnv$cnv == "deletion") {
-    v_sub <- vars[vars$type=="ht",]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
-    v_sub <- vars[vars$type=="hm",]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
-  } else if (cnv$cnv == "duplication") {
-    v_sub <- vars[vars$score == 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
-    v_sub <- vars[vars$score > 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
-    v_sub <- vars[vars$score < 0,]
-    karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=CONFIRM_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+  # Load variants for desired cnv
+  vars <- cnvfilter.results$variantsForEachCNV[[cnv.id]]
+  if (!is.null(vars)){
+
+    # Move freq values to the 0-1 interval
+    vars$alt.freq <- vars$alt.freq / 100.0
+
+    # Add points depending o CNV type
+    if (cnv$cnv == "deletion") {
+      v_sub <- vars[vars$type=="ht",]
+      karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+      v_sub <- vars[vars$type=="hm",]
+      karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    } else if (cnv$cnv == "duplication") {
+      v_sub <- vars[vars$score == 0,]
+      karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=NEUTRAL_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+      v_sub <- vars[vars$score > 0,]
+      karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=DISCARD_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+      v_sub <- vars[vars$score < 0,]
+      karyoploteR::kpPoints(kp, chr = as.character(v_sub$seqnames), x=v_sub$start, y=v_sub$alt.freq, col=CONFIRM_COLOR, r0 = r0, r1=r1, cex=points.cex, pch=points.pch)
+    }
   }
 
 
