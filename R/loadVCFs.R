@@ -118,7 +118,6 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
         idx <- Rsamtools::indexTabix(vcfFile, "vcf")
     }
 
-
     # Read data
     variantsList <- loadSNPsFromVCF(vcf.file = vcfFile, verbose = verbose, vcf.source = vcf.source, ref.support.field = ref.support.field,
                                     alt.support.field = alt.support.field, list.support.field = list.support.field, regions.to.filter = cnvs.gr,
@@ -146,6 +145,7 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
       sampleCNVsGR <- cnvs.gr[cnvs.gr$sample == sampleName, ]
       results[[sampleName]] <- auxProcessVariants(vars, sampleCNVsGR, heterozygous.range, homozygous.range, min.total.depth, exclude.indels, regions.to.exclude)
     }
+
 
   }
 
@@ -188,23 +188,12 @@ auxProcessVariants <- function(vars, cnvGR, heterozygous.range, homozygous.range
     mcolumns <- GenomicRanges::mcols(vars)
     mcolumns$indel <- Biostrings::width(mcolumns$ref) > 1 | Biostrings::width(mcolumns$alt) > 1
     mcolumns$type <- ""
-    for (i in seq_len(nrow(mcolumns))){
-      v <- mcolumns[i,]
-
-      if (is.numeric(v$alt.freq)){
-        if (v$alt.freq >= heterozygous.range[1] & v$alt.freq <= heterozygous.range[2]) {
-          mcolumns[i,"type"] <- "ht"
-        } else if (v$alt.freq >= homozygous.range[1] & v$alt.freq <= homozygous.range[2]){
-          mcolumns[i,"type"] <- "hm"
-        }
-      } else {
-        stop(paste("Allele frequency value is not numeric: ", v$alt.freq))
-      }
-
-    }
+    mcolumns <- as.data.frame(mcolumns)  # to speed up
+    mcolumns[mcolumns$alt.freq >= heterozygous.range[1] & mcolumns$alt.freq <= heterozygous.range[2], "type"] <- "ht"
+    mcolumns[mcolumns$alt.freq >= homozygous.range[1] & mcolumns$alt.freq <= homozygous.range[2], "type"] <- "hm"
 
     # set meta-columns
-    GenomicRanges::mcols(vars) <- mcolumns
+    GenomicRanges::mcols(vars) <- DataFrame(mcolumns)
 
     # retag as overlap_indel those SNV variants overlapped by an indel. Those variant will no be used in analysis
     snvs <- vars[!vars$indel,]
