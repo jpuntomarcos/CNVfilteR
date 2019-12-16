@@ -1,3 +1,18 @@
+Changes in version 1.1.4
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Loading variants process optimized (multiple times faster)
+
+
+BUG FIXES
+
+    o Fixed bug when plotting a CNV with no SNV variants matching it
+
+
+
+
 Changes in version 1.1.3
 -------------------------
 
