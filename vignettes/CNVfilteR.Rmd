@@ -127,7 +127,7 @@ variants discard the CNV except one homozygous variant that does not give us any
 information for supporting or discarding the CNV:
 
 ```{r, fig.wide=TRUE}
-plotVariantsForCNV(results, "19", )
+plotVariantsForCNV(results, "19")
 ```
 
 
