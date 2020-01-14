@@ -27,7 +27,7 @@ plotVariantsForCNV(cnvfilter.results, cnv.id, points.cex = 1,
 invisibly returns a \code{karyoplot} object
 }
 \description{
-Plots a CNV with all the variants matching it
+Plots a CNV with all the variants in it
 }
 \examples{
 # Load CNVs data
@@ -42,7 +42,7 @@ vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 # Filter CNVs
 results <- filterCNVs(cnvs.gr, vcfs)
 
-# Check CNVs that can be filtered
+# Check CNVs that can be filtered out
 as.data.frame(results$cnvs[results$cnvs$filter == TRUE])
 
 # Plot one of them
