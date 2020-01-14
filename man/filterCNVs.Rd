@@ -4,18 +4,11 @@
 \alias{filterCNVs}
 \title{filterCNVs}
 \usage{
-filterCNVs(
-  cnvs.gr,
-  vcfs,
-  expected.ht.mean = 50,
-  expected.dup.ht.mean1 = 33.3,
-  expected.dup.ht.mean2 = 66.6,
-  sigmoid.c1 = 2,
-  sigmoid.c2.vector = c(28, 38.3, 44.7, 55.3, 61.3, 71.3),
-  dup.threshold.score = 0.5,
-  ht.deletions.threshold = 15,
-  verbose = FALSE
-)
+filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
+  expected.dup.ht.mean1 = 33.3, expected.dup.ht.mean2 = 66.6,
+  sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 38.3, 44.7, 55.3, 61.3,
+  71.3), dup.threshold.score = 0.5, ht.deletions.threshold = 30,
+  verbose = FALSE, margin.pct = 0)
 }
 \arguments{
 \item{cnvs.gr}{\code{GRanges} containing CNVs to be filtered. Use \code{loadCNVcalls} to load them.}
@@ -34,22 +27,27 @@ filterCNVs(
 
 \item{dup.threshold.score}{Limit value to decide if a CNV duplication can be filtered or not. A CNV duplication can be filtered if the total score computed from heterozygous variants matching the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)}
 
-\item{ht.deletions.threshold}{Minimum percentage of heterozygous variants matching a CNV deletion to filter that CNV. (defaults to 15)}
+\item{ht.deletions.threshold}{Minimum percentage of heterozygous variants matching a CNV deletion to filter that CNV. (defaults to 30)}
 
 \item{verbose}{Whether to show information messages. (defaults to TRUE)}
+
+\item{margin.pct}{Variants in the CNV but close to the ends of the CNV will be ignored. \code{margin.pct} defines the percentage
+of CNV length, located at each CNV limit, where variants will be ignored. For example, for a CNV chr1:1000-2000 and
+a \code{margin.pct} value of 10, variants within chr1:1000-1100 and chr1:1900-2000 will be ignored.}
 }
 \value{
 A S3 object with 3 elements:
 \itemize{
 \item \code{cnvs}: \code{GRanges} with the input CNVs and the meta-columns added during the call:
   \itemize{
+   \item \code{cnv.id}: CNV id
    \item \code{filter}: Set to TRUE if the CNV can be filtered
    \item \code{n.total.variants}: Number of variants matching the CNV
    \item \code{n.hm.variants}: Number of homozygous variants. They do not give any evidenced for confirming or discarding the CNV.
    \item \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
    \item \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
+   \item \code{ht.pct}: Percentage of heterozygous variants for deletion CNVs
    \item \code{score}: total score when computing all the variants scores
-   \item \code{cnv.id}: CNV id
   }
 \item \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
 \item \code{filterParameters}: input parameters used for filtering
