@@ -1,7 +1,7 @@
 #' plotVariantsForCNV
 #'
 #' @description
-#' Plots a CNV with all the variants matching it
+#' Plots a CNV with all the variants in it
 #'
 #' @param cnvfilter.results S3 object returned by \code{filterCNVs} function
 #' @param cnv.id CNV id for which to plot variants
@@ -26,7 +26,7 @@
 #' # Filter CNVs
 #' results <- filterCNVs(cnvs.gr, vcfs)
 #'
-#' # Check CNVs that can be filtered
+#' # Check CNVs that can be filtered out
 #' as.data.frame(results$cnvs[results$cnvs$filter == TRUE])
 #'
 #' # Plot one of them
@@ -64,9 +64,9 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id, points.cex = 1,
   title <-  paste0(cnv$cnv, " at ", toString(cnv))
   if (cnv$filter == "TRUE"){
     if (cnv$cnv == "deletion") {
-      title <- paste0(title, ", it can be filtered")
+      title <- paste0(title, ", it can be filtered out")
     } else if (cnv$cnv == "duplication") {
-      title <- paste0(title, ", it can be filtered with a score of ", round(as.numeric(cnv$score), 4))
+      title <- paste0(title, ", it can be filtered out with a score of ", round(as.numeric(cnv$score), 4))
     }
   }
 

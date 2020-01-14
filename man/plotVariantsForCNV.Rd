@@ -4,15 +4,9 @@
 \alias{plotVariantsForCNV}
 \title{plotVariantsForCNV}
 \usage{
-plotVariantsForCNV(
-  cnvfilter.results,
-  cnv.id,
-  points.cex = 1,
-  points.pch = 19,
-  legend.x.pos = 0.08,
-  legend.y.pos = 0.25,
-  cnv.zoom.margin = TRUE
-)
+plotVariantsForCNV(cnvfilter.results, cnv.id, points.cex = 1,
+  points.pch = 19, legend.x.pos = 0.08, legend.y.pos = 0.25,
+  cnv.zoom.margin = TRUE)
 }
 \arguments{
 \item{cnvfilter.results}{S3 object returned by \code{filterCNVs} function}
