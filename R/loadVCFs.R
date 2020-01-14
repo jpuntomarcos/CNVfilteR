@@ -23,7 +23,7 @@
 #' @param vcf.files vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.
 #' @param sample.names Sample names vector containing sample names for each \code{vcf.files}. If NULL, sample name will be obtained from the VCF sample column.  (Defaults to NULL)
 #' @param cnvs.gr \code{GRanges} object containg CNV calls. Call \code{loadCNVcalls} to obtain it. Only those variants in regions affected by CNVs will be loaded to speed up the load.
-#' @param min.total.depth Minimum total depth. Variants under this value will be excluded. (Defaults to 30)
+#' @param min.total.depth Minimum total depth. Variants under this value will be excluded. (Defaults to 10)
 #' @param regions.to.exclude A \code{GRanges} object defining the regions for which the variants should be excluded.
 #' Useful for defining known difficult regions like pseudogenes where the allele frequency is not trustable. (Defaults to NULL)
 #' @param vcf.source VCF source, i.e., the variant caller used to generate the VCF file. If set, the \code{loadSNPsFromVCF} function will not try to recognize the source. (Defaults to NULL)
@@ -59,7 +59,7 @@
 #' @export loadVCFs
 #'
 loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
-                     min.total.depth = 30, regions.to.exclude = NULL, vcf.source = NULL,
+                     min.total.depth = 10, regions.to.exclude = NULL, vcf.source = NULL,
                      ref.support.field = NULL, alt.support.field = NULL, list.support.field = NULL,
                      homozygous.range = c(90,100), heterozygous.range = c(28,72), exclude.indels = TRUE,
                      genome = "hg19", exclude.non.canonical.chrs = TRUE, verbose = TRUE) {

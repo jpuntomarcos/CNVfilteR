@@ -4,23 +4,12 @@
 \alias{loadVCFs}
 \title{loadVCFs}
 \usage{
-loadVCFs(
-  vcf.files,
-  sample.names = NULL,
-  cnvs.gr,
-  min.total.depth = 30,
-  regions.to.exclude = NULL,
-  vcf.source = NULL,
-  ref.support.field = NULL,
-  alt.support.field = NULL,
-  list.support.field = NULL,
-  homozygous.range = c(90, 100),
-  heterozygous.range = c(28, 72),
-  exclude.indels = TRUE,
-  genome = "hg19",
-  exclude.non.canonical.chrs = TRUE,
-  verbose = TRUE
-)
+loadVCFs(vcf.files, sample.names = NULL, cnvs.gr, min.total.depth = 10,
+  regions.to.exclude = NULL, vcf.source = NULL,
+  ref.support.field = NULL, alt.support.field = NULL,
+  list.support.field = NULL, homozygous.range = c(90, 100),
+  heterozygous.range = c(28, 72), exclude.indels = TRUE,
+  genome = "hg19", exclude.non.canonical.chrs = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{vcf.files}{vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.}
@@ -29,7 +18,7 @@ loadVCFs(
 
 \item{cnvs.gr}{\code{GRanges} object containg CNV calls. Call \code{loadCNVcalls} to obtain it. Only those variants in regions affected by CNVs will be loaded to speed up the load.}
 
-\item{min.total.depth}{Minimum total depth. Variants under this value will be excluded. (Defaults to 30)}
+\item{min.total.depth}{Minimum total depth. Variants under this value will be excluded. (Defaults to 10)}
 
 \item{regions.to.exclude}{A \code{GRanges} object defining the regions for which the variants should be excluded.
 Useful for defining known difficult regions like pseudogenes where the allele frequency is not trustable. (Defaults to NULL)}

@@ -232,7 +232,7 @@ As VCF will be used for determining if a CNV can be filtered out, it is
 recommended to use a VCF file free of artifacts to improve the accuracy
 when identifying those CNVs. `loadVCFs` will load only 
 variants with a minimum total depth
-greater than `min.total.depth` (defaults to 30). Additionally, we can exclude
+greater than `min.total.depth` (defaults to 10). Additionally, we can exclude
 those regions that have already known artifacts with the parameter 
 `regions.to.exclude`. In this example, we exclude PMS2, PRSS1, and
 FANCD2 genes because they are pseudogenes with alignments artifacts:
