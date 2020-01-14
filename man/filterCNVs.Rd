@@ -11,7 +11,7 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
   verbose = FALSE, margin.pct = 0)
 }
 \arguments{
-\item{cnvs.gr}{\code{GRanges} containing CNVs to be filtered. Use \code{loadCNVcalls} to load them.}
+\item{cnvs.gr}{\code{GRanges} containing CNVs to be filtered out. Use \code{loadCNVcalls} to load them.}
 
 \item{vcfs}{List of \code{GRanges} containing all variants (SNV/indel) obtaining with the \code{loadVCFs} function.}
 
@@ -25,9 +25,9 @@ filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
 
 \item{sigmoid.c2.vector}{Vector containing sigmoid c2 parameters for the six sigmoids functions. (defaults to c(28, 38.3, 44.7, 55.3, 61.3, 71.3))}
 
-\item{dup.threshold.score}{Limit value to decide if a CNV duplication can be filtered or not. A CNV duplication can be filtered if the total score computed from heterozygous variants matching the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)}
+\item{dup.threshold.score}{Limit value to decide if a CNV duplication can be filtered out or not. A CNV duplication can be filtered out if the total score computed from heterozygous variants in the CNV is equal or greater than \code{dup.threshold.score}.  (defaults to 0.5)}
 
-\item{ht.deletions.threshold}{Minimum percentage of heterozygous variants matching a CNV deletion to filter that CNV. (defaults to 30)}
+\item{ht.deletions.threshold}{Minimum percentage of heterozygous variants falling in a CNV deletion to filter that CNV. (defaults to 30)}
 
 \item{verbose}{Whether to show information messages. (defaults to TRUE)}
 
@@ -41,29 +41,29 @@ A S3 object with 3 elements:
 \item \code{cnvs}: \code{GRanges} with the input CNVs and the meta-columns added during the call:
   \itemize{
    \item \code{cnv.id}: CNV id
-   \item \code{filter}: Set to TRUE if the CNV can be filtered
-   \item \code{n.total.variants}: Number of variants matching the CNV
+   \item \code{filter}: Set to TRUE if the CNV can be filtered out
+   \item \code{n.total.variants}: Number of variants in the CNV
    \item \code{n.hm.variants}: Number of homozygous variants. They do not give any evidenced for confirming or discarding the CNV.
    \item \code{n.ht.discard.CNV}: For a CNV duplication, number of heterozygous variants in that discard the CNV (those with a positive score)
    \item \code{n.ht.confirm.CNV}: For a CNV duplication, number of heterozygous variants that confirm the CNV (those with a negative score)
    \item \code{ht.pct}: Percentage of heterozygous variants for deletion CNVs
    \item \code{score}: total score when computing all the variants scores
   }
-\item \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants matching that CNV
+\item \code{variantsForEachCNV}: named list where each name correspond to a CNV id and the value is a \code{data.frame} with all variants falling in that CNV
 \item \code{filterParameters}: input parameters used for filtering
 }
 }
 \description{
-Identifies those copy number calls that can be filtered
+Identifies those copy number calls that can be filtered out
 }
 \details{
-Checks all the variants (SNV and optionally INDELs) matching each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered or not.
+Checks all the variants (SNV and optionally INDELs) in each CNV present in \code{cnvs.gr} to decide whether a CNV can be filtered out or not.
 It returns an S3 object with 3 elments: \code{cnvs}, \code{variantsForEachCNV} and \code{filterParameters}. See return section for further details.
 
-A CNV deletion can be filtered if there is at least \code{ht.deletions.threshold}% of heterozygous variants matching the CNV.
-A CNV duplication can be filtered if the \code{score} is >= \code{dup.threshold.score} after computing all heterozygous variants matching the CNV.
+A CNV deletion can be filtered out if there is at least \code{ht.deletions.threshold}% of heterozygous variants in the CNV.
+A CNV duplication can be filtered out if the \code{score} is >= \code{dup.threshold.score} after computing all heterozygous variants falling in the CNV.
 
-If a CNV can be filtered, then the value TRUE is set in the \code{filter} column of the \code{cnvs} element.
+If a CNV can be filtered out, then the value TRUE is set in the \code{filter} column of the \code{cnvs} element.
 }
 \examples{
 # Load CNVs data
@@ -78,7 +78,7 @@ vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
 # Filter CNVs
 results <- filterCNVs(cnvs.gr, vcfs)
 
-# Check CNVs that can be filtered
+# Check CNVs that can be filtered out
 as.data.frame(results$cnvs[results$cnvs$filter == TRUE])
 
 
