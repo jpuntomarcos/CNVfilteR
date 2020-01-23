@@ -69,7 +69,7 @@ Bioconductor**.
 # Quick Start
 
 Below we show a full example that covers the usual steps: CNVs data loading,
-variants loading, identifying false postives and plotting the results.
+SNVs loading, identifying false postives and plotting the results.
 
 First, we can load some CNV tool results:
 ```{r message=FALSE}
@@ -101,9 +101,9 @@ And we can check those CNVs that can be filtered out:
 results$cnvs[results$cnvs$filter == TRUE]
 ```
 
-As an example, we can observe that the CNV with `cnv.id`=3 has 4 variants 
-matching it: 2 in favor of discarding it, two against discarding it. If we want 
-to know more about the variants matching a certain CNV we can do:
+As an example, we can observe that the CNV with `cnv.id`=3 contains 4 variants:
+2 in favor of discarding it, two against discarding it. If we want 
+to know more about the variants falling in a certain CNV we can do:
 ```{r}
 results$variantsForEachCNV[["3"]]
 ```
@@ -115,7 +115,7 @@ they obtain a low negative score. All these default values and others can
 be modified in the `filterCNVs()` function.
 
 Finally, we may be interested in plotting the results. For example, we can
-plot easily the duplication CNV with `cnv.id`=3 and all the variants matching
+plot easily the duplication CNV with `cnv.id`=3 and all the variants falling in
 it.
 
 ```{r, fig.wide=TRUE}
@@ -136,7 +136,7 @@ On the opposite side, we can observe those CNVs that cannot be discarded:
 results$cnvs[results$cnvs$filter != TRUE]
 ```
 
-For example, the CNV with `cnv.id`=14 has one variant matching it. If we get
+For example, the CNV with `cnv.id`=14 contains one variant. If we get
 the variant info, we see that the variant has an allele frequency very close to
 the default expected duplication value, 0.66.
 
@@ -228,24 +228,44 @@ vcfs3 <- loadVCFs(vcf.file3, cnvs.gr = cnvs.gr, vcf.source = "MyCaller", list.su
 
 ## VCF free of artifacts
 
-As VCF will be used for determining if a CNV can be filtered out, it is
-recommended to use a VCF file free of artifacts to improve the accuracy
-when identifying those CNVs. `loadVCFs` will load only 
-variants with a minimum total depth
-greater than `min.total.depth` (defaults to 10). Additionally, we can exclude
-those regions that have already known artifacts with the parameter 
-`regions.to.exclude`. In this example, we exclude PMS2, PRSS1, and
+As VCF will be used for determining if a CNV can be filtered out, **we
+recommend to use a VCF file free of false-positive SNVs** (as possible)
+to improve the accuracy when identifying those CNVs. The aim is to discard the
+SNVs that are probably false-positives and also those which allele 
+frequency is no reliable.
+
+### Minimun total depth
+
+`loadVCFs` will load only variants with a **minimum total depth** equal or 
+greater than `min.total.depth`. The default value, 10, showed good performance
+on our CNVfilteR evaluation on 3 WGS samples (data will be available soon) 
+and using Strelka2 as SNV variant caller. This value **should be
+adapted to your variant calling tool and sequencing depth conditions**. For 
+example, we used a `min.total.depth`
+of 30 when using CNVfilteR on panel (targeted-enrinched) samples with high 
+coverage and VarScan2 as SNV caller.
+
+
+### Regions to exclude
+
+Additionally, we can exclude
+those complex regions that have already known alignement artifacts 
+with the parameter `regions.to.exclude`. 
+In this example, we exclude PMS2, PRSS1, and
 FANCD2 genes because they are pseudogenes with alignments artifacts:
 ```{r}
 regions.to.exclude <- GRanges(seqnames = c("chr3","chr7", "chr7"), ranges = IRanges(c(10068098, 6012870, 142457319), c(10143614, 6048756, 142460923)))
 vcfs4 <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr, regions.to.exclude = regions.to.exclude)
 ```
 
+### INDELs excluded by default
+
 Also, the parameter `exclude.indels` indicates whether to exclude INDELs when 
 loading the variants. TRUE is the default and **recommended** value given 
 that INDELs allele frequency varies differently than SNVs. Including
 INDELs may allow the algorithm to identify more CNVs to discard with a greater
-risk of identifying them wrongly.
+risk of identifying them wrongly. Additionally, any SNV overlapping an INDEL
+will be ignored because the SNV allele frequency may be affected in that region.
 
 
 ## Other settings
@@ -266,8 +286,8 @@ See `loadVCFs()` documentation to see other parameters info.
 # Identifying false positives
 
 The task of identifying false positives is performed by the `filterCNVs()`
-function. It checks all the variants (SNVs and optionally INDELs) matching
-each CNV present in `cnvs.gr` to identify those CNVs that can be filtered. It
+function. It checks all the variants (SNVs and optionally INDELs) falling in
+each CNV present in `cnvs.gr` to identify those CNVs that can be filtered out. It
 returns an S3 object with 3 elements: `cnvs`, `variantsForEachCNV` and 
 `filterParameters`:
 
@@ -277,16 +297,16 @@ tail(results$cnvs)
 ```
 
 
-Observe that **those CNVs that can be filtered have the value TRUE in the 
+Observe that **those CNVs that can be filtered out have the value TRUE in the 
 column `filter`**. `r BiocStyle::Biocpkg("CNVfilteR")` employs two
 different strategies for identifying those CNVs:
 
- * A **deletion CNV** can be filtered if there is at least 
- `ht.deletions.threshold`% of heterozygous variants matching
- the CNV. Default `ht.deletions.threshold` value is 15, so 15% is required.
- * A **duplication CNV** can be filtered if the total `score` is >= 
+ * A **deletion CNV** can be filtered out if there is at least 
+ `ht.deletions.threshold`% of heterozygous variants in
+ the CNV. Default `ht.deletions.threshold` value is 30, so 30% is required.
+ * A **duplication CNV** can be filtered out if the total `score` is >= 
  `dup.threshold.score` after computing all 
- heterozygous variants matching that CNV. Default `dup.threshold.score` value
+ heterozygous variants falling in that CNV. Default `dup.threshold.score` value
  is 0.5. How the score is computed for each variant is explained in 
  the next section.
 
@@ -295,7 +315,7 @@ different strategies for identifying those CNVs:
 
 The scoring model for determining whether a certain duplication CNV can be 
 discarded
-is based on the allele frequency for each heterozygous variant matching
+is based on the allele frequency for each heterozygous variant falling in
 that CNV:
 
  * In common conditions with no presence of a duplication CNV, the allele 
@@ -329,7 +349,7 @@ how close is the allele frequency to the nearest expected mean**.
  a duplication CNV occurs (defaults 33.3%, 66.6%), the score will be negative 
  in the interval [-1, 0].
 
-The total `score` is computed among all the variants matching the CNV. If the 
+The total `score` is computed among all the variants falling in the CNV. If the 
 `score` is greater than the `dup.threshold.score`, the CNV can be discarded.
 
 A common way of applying the fuzzy logic is using the sigmoid function. 
@@ -389,10 +409,25 @@ plotScoringModel(expected.ht.mean = p$expected.ht.mean,
                  sigmoid.c2.vector = c(28, 38.3, 46.7, 53.3, 61.3, 71.3))
 ```
 
+## The margin.pct parameter
+The idea under this parameter is to ignore the variants placed in the "margins"
+of the CNV given that WGS CNV callers make unaccurate calls: they work on 
+windows sizes that may not correspond with the real CNV size. In consequence, we 
+prefer to exlude SNVs falling in the margins to avoid potential "noise" (SNVs
+out of the real CNV). In our evaluation on the HuRef WGS sample, we observed that
+values between 10 (default value) and 20 performed the best (data available soon).
+
+Summarizing, variants in the CNV call but close to the ends of the CNV call will
+be ignored. `margin.pct` defines the percentage of CNV length, located at 
+each CNV limit, where variants will be ignored. For example, for a CNV 
+chr1:1000-2000 and a `margin.pct` value of 10,
+variants within chr1:1000-1100 and chr1:1900-2000 will be ignored.
+
+
 
 # Plotting results
 
-We can plot easily a certain CNV and its matching variants. For example,  the 
+We can plot easily a certain CNV and the variants in it. For example,  the 
 duplication CNV with `cnv.id`=17 can be plotted as follows:
 ```{r, fig.wide=TRUE}
 plotVariantsForCNV(results, "17")
