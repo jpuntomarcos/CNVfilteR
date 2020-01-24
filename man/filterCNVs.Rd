@@ -4,11 +4,19 @@
 \alias{filterCNVs}
 \title{filterCNVs}
 \usage{
-filterCNVs(cnvs.gr, vcfs, expected.ht.mean = 50,
-  expected.dup.ht.mean1 = 33.3, expected.dup.ht.mean2 = 66.6,
-  sigmoid.c1 = 2, sigmoid.c2.vector = c(28, 38.3, 44.7, 55.3, 61.3,
-  71.3), dup.threshold.score = 0.5, ht.deletions.threshold = 30,
-  verbose = FALSE, margin.pct = 10)
+filterCNVs(
+  cnvs.gr,
+  vcfs,
+  expected.ht.mean = 50,
+  expected.dup.ht.mean1 = 33.3,
+  expected.dup.ht.mean2 = 66.6,
+  sigmoid.c1 = 2,
+  sigmoid.c2.vector = c(28, 38.3, 44.7, 55.3, 61.3, 71.3),
+  dup.threshold.score = 0.5,
+  ht.deletions.threshold = 30,
+  verbose = FALSE,
+  margin.pct = 10
+)
 }
 \arguments{
 \item{cnvs.gr}{\code{GRanges} containing CNVs to be filtered out. Use \code{loadCNVcalls} to load them.}

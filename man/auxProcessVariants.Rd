@@ -4,8 +4,15 @@
 \alias{auxProcessVariants}
 \title{auxProcessVariants}
 \usage{
-auxProcessVariants(vars, cnvGR, heterozygous.range, homozygous.range,
-  min.total.depth, exclude.indels, regions.to.exclude)
+auxProcessVariants(
+  vars,
+  cnvGR,
+  heterozygous.range,
+  homozygous.range,
+  min.total.depth,
+  exclude.indels,
+  regions.to.exclude
+)
 }
 \arguments{
 \item{vars}{\code{GRanges} object containing variants for a certain sample.}

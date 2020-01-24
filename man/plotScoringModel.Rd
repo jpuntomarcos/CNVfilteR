@@ -4,8 +4,13 @@
 \alias{plotScoringModel}
 \title{plotVariantsForCNV}
 \usage{
-plotScoringModel(expected.ht.mean, expected.dup.ht.mean1,
-  expected.dup.ht.mean2, sigmoid.c1, sigmoid.c2.vector)
+plotScoringModel(
+  expected.ht.mean,
+  expected.dup.ht.mean1,
+  expected.dup.ht.mean2,
+  sigmoid.c1,
+  sigmoid.c2.vector
+)
 }
 \arguments{
 \item{expected.ht.mean}{Expected heterozygous SNV/indel allele frequency}

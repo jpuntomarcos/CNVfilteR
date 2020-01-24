@@ -4,12 +4,23 @@
 \alias{loadVCFs}
 \title{loadVCFs}
 \usage{
-loadVCFs(vcf.files, sample.names = NULL, cnvs.gr, min.total.depth = 10,
-  regions.to.exclude = NULL, vcf.source = NULL,
-  ref.support.field = NULL, alt.support.field = NULL,
-  list.support.field = NULL, homozygous.range = c(90, 100),
-  heterozygous.range = c(28, 72), exclude.indels = TRUE,
-  genome = "hg19", exclude.non.canonical.chrs = TRUE, verbose = TRUE)
+loadVCFs(
+  vcf.files,
+  sample.names = NULL,
+  cnvs.gr,
+  min.total.depth = 10,
+  regions.to.exclude = NULL,
+  vcf.source = NULL,
+  ref.support.field = NULL,
+  alt.support.field = NULL,
+  list.support.field = NULL,
+  homozygous.range = c(90, 100),
+  heterozygous.range = c(28, 72),
+  exclude.indels = TRUE,
+  genome = "hg19",
+  exclude.non.canonical.chrs = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{vcf.files}{vector of VCFs paths. Both .vcf and .vcf.gz extensions are allowed.}

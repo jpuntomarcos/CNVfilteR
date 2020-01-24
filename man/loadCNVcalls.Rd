@@ -4,11 +4,23 @@
 \alias{loadCNVcalls}
 \title{loadCNVcalls}
 \usage{
-loadCNVcalls(cnvs.file, chr.column, start.column, end.column,
-  coord.column = NULL, cnv.column, sample.column, sample.name = NULL,
-  gene.column = NULL, deletion = "deletion",
-  duplication = "duplication", sep = "\\t", skip = 0,
-  genome = "hg19", exclude.non.canonical.chrs = TRUE)
+loadCNVcalls(
+  cnvs.file,
+  chr.column,
+  start.column,
+  end.column,
+  coord.column = NULL,
+  cnv.column,
+  sample.column,
+  sample.name = NULL,
+  gene.column = NULL,
+  deletion = "deletion",
+  duplication = "duplication",
+  sep = "\\t",
+  skip = 0,
+  genome = "hg19",
+  exclude.non.canonical.chrs = TRUE
+)
 }
 \arguments{
 \item{cnvs.file}{Path to csv/tsv file containing the CNV calls.}
