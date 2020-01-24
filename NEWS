@@ -3,10 +3,11 @@ Changes in version 1.1.4
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
-    o Improved CNVfilteR accuracy.margin.pct parameter was added to filterCNVs() and ht.deletions.threshold default value modified to 30.
+    o Improved CNVfilteR accuracy. margin.pct parameter was added to filterCNVs() and ht.deletions.threshold default value was modified to 30.
     o Loading variants process optimized (multiple times faster)
     o filterCNVs() function optimized
-    o min.total.depth default value to 10
+    o min.total.depth default value modified to 10
+    o Added multiple modifications to the vignette
 
 
 BUG FIXES
