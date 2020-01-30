@@ -113,9 +113,9 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 
   # set genoField
   if (is.null(ref.support.field)){
-    genoField <- list.support.field
+    genoField <- c("GT", list.support.field)
   } else {
-    genoField <- c(ref.support.field, alt.support.field)
+    genoField <- c("GT", ref.support.field, alt.support.field)
   }
 
   if (verbose) message(msg)
@@ -163,6 +163,13 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   for(s in samples) {
 
     v <- vars[,s]
+
+    # Filter: only variants with GT denoting that the variant was found
+    ids.to.select <- sapply(VariantAnnotation::geno(v)[["GT"]],
+                            function(gt) gt %in% c("0/1", "0|1", "1/1", "1|1"))
+    v <- v[ids.to.select]
+
+
     if (support.field.is.list) {
 
       # Get alt depth
@@ -170,6 +177,12 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 
       # process it expecting 4 or 2 items
       if (ref.and.forward.fields) {
+        # Discard those variants with unexpected number of ref/alt values
+        ids.to.select <- sapply(depths.list, function(i) length(i) == 4)
+        v <- v[ids.to.select]
+        depths.list <- depths.list[ids.to.select]
+
+        # Get depths
         depths.ref1 <- unlist(lapply(depths.list, "[", 1))
         depths.ref2 <- unlist(lapply(depths.list, "[", 2))
         depths.alt3 <- unlist(lapply(depths.list, "[", 3))
@@ -177,6 +190,13 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
         depths.ref <- depths.ref1 + depths.ref2
         depths.alt <- depths.alt3 + depths.alt4
       } else {
+
+        # Discard those variants with unexpected number of ref/alt values
+        ids.to.select <- sapply(depths.list, function(i) length(i) == 2)
+        v <- v[ids.to.select]
+        depths.list <- depths.list[ids.to.select]
+
+        # Get depths
         depths.ref <- unlist(lapply(depths.list, "[", 1))
         depths.alt <- unlist(lapply(depths.list, "[", 2))
       }
@@ -196,9 +216,6 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     #Build the GRanges
     ref <- VariantAnnotation::ref(v)
     alt <- unlist(VariantAnnotation::alt(v))
-    if(length(ref) != length(alt)) {
-      stop("Multiple alt fields are not supported.")
-    }
     v <- SummarizedExperiment::rowRanges(v)
     mdata <- data.frame(ref = ref, alt = alt, ref.support = as.vector(depths.ref), alt.support = as.vector(depths.alt),
                         alt.freq = as.vector(freqs.alt), total.depth = as.vector(total.depth))
