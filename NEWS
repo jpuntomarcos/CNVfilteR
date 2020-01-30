@@ -1,3 +1,18 @@
+Changes in version 1.1.5
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o Added ignore.unexpected.rows parameter to loadCNVcalls() function to ignore CNV calls which deletion/duplication value is not the expected one.
+
+
+BUG FIXES
+
+    o Some SNV callers can produce calls with a genotype indicating that the variant actually was not found. Variants with GTs like "0/0 ./. 1/0" are now discarded.
+    o Certain SNV callers can produce SNV calls with more than two alt values (multiple alt alleles). These variants are now discarded.
+
+
+
 Changes in version 1.1.4
 -------------------------
 
