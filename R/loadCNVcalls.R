@@ -19,6 +19,7 @@
 #' @param gene.column Which columns store the gene or genes affected (optional). (Defaults to NULL)
 #' @param deletion Text used in the \code{cnv.column} to represent deletion CNVs. Multiple values are also allowed, for example: c("CN0", "CN1"). (Defaults to "deletion")
 #' @param duplication Text used in the \code{cnv.column} to represent duplication CNVs.  Multiple values are also allowed, for example: c("CN3", "CN4") (Defaults to "duplication")
+#' @param ignore.unexpected.rows Whether to ignore the rows which CNV \code{cnv.column} value is different to \code{deletion} or \code{duplication} values (Defaults to FALSE). It is useful for processing output from callers like LUMPY or Manta (they call also events that are not CNVs)
 #' @param sep Separator symbol to load the csv/tsv file. (Defaults to "\\t")
 #' @param skip Number of rows that should be skipped when reading the csv/tsv file. (Defaults to 0)
 #' @param genome The name of the genome. (Defaults to "hg19")
@@ -37,6 +38,7 @@
 #'
 #'
 #' @import assertthat
+#' @importFrom Biostrings head
 #' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom utils read.csv
 #'
@@ -46,6 +48,7 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
                          coord.column = NULL, cnv.column, sample.column,
                          sample.name = NULL, gene.column = NULL,
                          deletion = "deletion", duplication = "duplication",
+                         ignore.unexpected.rows = FALSE,
                          sep = "\t", skip = 0, genome = "hg19",
                          exclude.non.canonical.chrs = TRUE){
 
@@ -98,11 +101,13 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
   # Assert CNV type values are correct
   cnvValuesCheck <- unique(cnvs.df$cnv) %in%  c(deletion, duplication)
   if(!identical(unique(cnvValuesCheck), TRUE)) {
-    stop(paste0("Values found in ", cnv.column, " column are [",
-               toString(unique(cnvs.df$cnv)), "] but expected values are '",
-               toString(c(deletion, duplication)),
-               "'. Please, use the duplication and deletion parameters to select the expected values for the ",
-               cnv.column ," column"))
+    if (!ignore.unexpected.rows){
+      stop(paste0("Values found in ", cnv.column, " column are ",
+                 toString(Biostrings::head(unique(cnvs.df$cnv))), " but expected values are only '",
+                 toString(c(deletion, duplication)),
+                 "'. Please, use the duplication and deletion parameters to select the expected values for the ",
+                 cnv.column ," column, or set ignore.unexpected.rows parameter to TRUE"))
+    }
   }
 
 
@@ -115,9 +120,12 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
   # Select only desired columns
   cnvs.df <- cnvs.df[, CNV_DF_COLUMNS]
 
-  # reassing deletion / duplication text values
+  # reassign deletion / duplication text values
   cnvs.df[cnvs.df$cnv %in% deletion, "cnv"] <- "deletion"
   cnvs.df[cnvs.df$cnv %in% duplication, "cnv"] <- "duplication"
+
+  # Discard those rows with a CNV type different to the expected ones
+  cnvs.df <- cnvs.df[cnvs.df$cnv %in% c("deletion", "duplication"),]
 
   # Transform to GRanges
   cnvs.gr <- regioneR::toGRanges(cnvs.df, genome = genome)

@@ -16,6 +16,7 @@ loadCNVcalls(
   gene.column = NULL,
   deletion = "deletion",
   duplication = "duplication",
+  ignore.unexpected.rows = FALSE,
   sep = "\\t",
   skip = 0,
   genome = "hg19",
@@ -45,6 +46,8 @@ loadCNVcalls(
 \item{deletion}{Text used in the \code{cnv.column} to represent deletion CNVs. Multiple values are also allowed, for example: c("CN0", "CN1"). (Defaults to "deletion")}
 
 \item{duplication}{Text used in the \code{cnv.column} to represent duplication CNVs.  Multiple values are also allowed, for example: c("CN3", "CN4") (Defaults to "duplication")}
+
+\item{ignore.unexpected.rows}{Whether to ignore the rows which CNV \code{cnv.column} value is different to \code{deletion} or \code{duplication} values (Defaults to FALSE). It is useful for processing output from callers like LUMPY or Manta (they call also events that are not CNVs)}
 
 \item{sep}{Separator symbol to load the csv/tsv file. (Defaults to "\\t")}
 
