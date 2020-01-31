@@ -29,6 +29,8 @@
 #'  \item \code{sample}: sample name
 #' }
 #'
+#' Returns NULL if \code{cnvs.file} has no CNVs
+#'
 #' @examples
 #' # Load CNVs data
 #' cnvs.file <- system.file("extdata", "DECoN.CNVcalls.csv", package = "CNVfilteR", mustWork = TRUE)
@@ -68,6 +70,11 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column, coord.
 
   # Read data
   cnvs.df <- utils::read.csv(cnvs.file, sep=sep, header=TRUE, stringsAsFactors = FALSE, skip = skip)
+
+  if (nrow(cnvs.df) == 0){
+    message(paste("Warning: ", cnvs.file," has no rows"))
+    return(NULL)
+  }
 
   # Rename and select needed columns
   colnames(cnvs.df)[which(names(cnvs.df) == cnv.column)] <- "cnv"

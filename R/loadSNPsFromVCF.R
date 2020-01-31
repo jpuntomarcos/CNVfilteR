@@ -167,7 +167,9 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
     # Filter: only variants with GT denoting that the variant was found
     ids.to.select <- sapply(VariantAnnotation::geno(v)[["GT"]],
                             function(gt) gt %in% c("0/1", "0|1", "1/1", "1|1"))
-    v <- v[ids.to.select]
+    if (length(ids.to.select) > 0) {
+      v <- v[ids.to.select]
+    }
 
 
     if (support.field.is.list) {
@@ -193,8 +195,10 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
 
         # Discard those variants with unexpected number of ref/alt values
         ids.to.select <- sapply(depths.list, function(i) length(i) == 2)
-        v <- v[ids.to.select]
-        depths.list <- depths.list[ids.to.select]
+        if (length(ids.to.select) > 0) {
+          v <- v[ids.to.select]
+          depths.list <- depths.list[ids.to.select]
+        }
 
         # Get depths
         depths.ref <- unlist(lapply(depths.list, "[", 1))
