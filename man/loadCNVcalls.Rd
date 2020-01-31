@@ -63,6 +63,8 @@ A \code{GRanges} with a range per each CNV and the metadata columns:
  \item \code{cnv}: type of CNV, "duplication" or "deletion"
  \item \code{sample}: sample name
 }
+
+Returns NULL if \code{cnvs.file} has no CNVs
 }
 \description{
 Loads CNV calls from a csv/tsv file
