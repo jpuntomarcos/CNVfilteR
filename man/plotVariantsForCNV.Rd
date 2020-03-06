@@ -11,6 +11,13 @@ plotVariantsForCNV(
   points.pch = 19,
   legend.x.pos = 0.08,
   legend.y.pos = 0.25,
+  legend.cex = 0.8,
+  karyotype.cex = 1,
+  cnv.label.cex = 1,
+  x.axis.bases.cex = 0.7,
+  x.axis.bases.digits = 5,
+  y.axis.title.cex = 0.8,
+  y.axis.label.cex = 0.8,
   cnv.zoom.margin = TRUE
 )
 }
@@ -26,6 +33,20 @@ plotVariantsForCNV(
 \item{legend.x.pos}{Legend x position. (Defaults to 0.08)}
 
 \item{legend.y.pos}{Legend y position. (Defaults to 0.25)}
+
+\item{legend.cex}{Legend cex. (Defaults to 0.8)}
+
+\item{karyotype.cex}{karyotype cex: affects top title and chromosome text (at bottom). (Defaults to 1)}
+
+\item{cnv.label.cex}{"CNV" text cex. (Defaults to 1)}
+
+\item{x.axis.bases.cex}{X-axis bases position cex. (Defaults to 0.7)}
+
+\item{x.axis.bases.digits}{X-axis bases position number of digits. (Defaults to 5)}
+
+\item{y.axis.title.cex}{Y-axis title cex. (Defaults to 0.8)}
+
+\item{y.axis.label.cex}{Y-axis labels cex. (Defaults to 0.8)}
 
 \item{cnv.zoom.margin}{If TRUE, the zoom leaves an small margin at both sides of the CNV. False otherwise. (Defaults to TRUE)}
 }
