@@ -1,3 +1,17 @@
+Changes in version 1.1.6
+-------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o plotVariantsForCNV() allows multiple visual adjustements
+
+
+MINOR
+
+    o Added error control in loadVCFs(): heterozygous.range and homozygous.range cannot overlap
+
+
+
 Changes in version 1.1.5
 -------------------------
 
