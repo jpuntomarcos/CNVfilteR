@@ -196,16 +196,12 @@ filterCNVs <- function(cnvs.gr, vcfs, expected.ht.mean = 50, expected.dup.ht.mea
   # Calculate % of CNVs to be filtered
   nFiltered <- nrow(cnvs.df[cnvs.df$filter == TRUE,])
   pct <- round(nFiltered/nCNVs*100, 2)
-  if (verbose){
-    message(paste0(nFiltered, " of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
-  }
+  message(paste0(nFiltered, " out of ", nCNVs, " (", pct ,"%) CNVs can be filtered"))
 
   # Calculate % with matching variants to be filtered
   nCNVsWithMatchingVariants <- nrow(cnvs.df[cnvs.df$n.total.variants > 0 ,])
   pct <- round(nFiltered/nCNVsWithMatchingVariants*100, 2)
-  if (verbose){
-    message(paste0(nFiltered, " of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
-  }
+  message(paste0(nFiltered, " out of ", nCNVsWithMatchingVariants, " (", pct ,"%) CNVs with overlapping SNVs can be filtered"))
 
   # convert again data.frame to GRanges
   cnvs.gr.final <- regioneR::toGRanges(cnvs.df)
