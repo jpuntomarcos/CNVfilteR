@@ -1,3 +1,24 @@
+Changes in version 1.4.1
+-------------------------
+
+BUG FIXES
+
+    o Bug fixed: SNVs were not being correctly loaded after last Bioconductor update
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o plotAllCNVs() allows 'genome' parameter to work with different genomes
+
+
+MINOR
+
+    o Minor vignette fixes
+    o Other minor fixes
+
+
+
+
 Changes in version 1.1.6
 -------------------------
 
