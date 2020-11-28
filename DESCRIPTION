@@ -2,14 +2,24 @@ Package: CNVfilteR
 Type: Package
 Title: Identifies false positives of CNV calling tools by using SNV calls
 Version: 1.5.0
-Author: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat> and Bernat Gel <bgel@igtp.cat> 
-Maintainer: Jose Marcos Moreno-Cabrera <jmoreno@igtp.cat>
+Authors@R:
+    c(person(
+        given = "Jose Marcos",
+        family = "Moreno-Cabrera",
+        role = c("aut", "cre"),
+        email = "jpuntomarcos@gmail.com",
+        comment = c(ORCID = "0000-0001-8570-0345")
+    ), person(
+        given = "Bernat",
+        family = "Gel",
+        role = "aut"
+    ))
 Description: CNVfilteR identifies those CNVs that can be discarded by using the single nucleotide variant (SNV) calls that are usually obtained in common NGS pipelines.
 License: Artistic-2.0
 URL: https://github.com/jpuntomarcos/CNVfilteR
 Encoding: UTF-8
-RoxygenNote: 7.0.0
-Depends: R (>= 3.6)
+RoxygenNote: 7.1.1
+Depends: R (>= 4.0)
 Imports: 
   IRanges,
   GenomicRanges,
