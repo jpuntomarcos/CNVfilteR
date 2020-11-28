@@ -37,7 +37,7 @@
 #'
 #' @import assertthat
 #' @import VariantAnnotation
-#' @importFrom GenomeInfoDb seqlevelsStyle
+#' @importFrom GenomeInfoDb seqlevelsStyle seqlevels
 #' @importFrom regioneR toGRanges filterChromosomes
 #' @importFrom Rsamtools TabixFile headerTabix
 #' @importFrom methods is
@@ -153,9 +153,8 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   # load variants
   vars <- VariantAnnotation::readVcf(file=Rsamtools::TabixFile(vcf.file), genome = genome, param = scan.vcf.param)
   if (length(vars) > 0) {
-    GenomeInfoDb::seqlevelsStyle(vars) <- "UCSC"
+    GenomeInfoDb::seqlevelsStyle(GenomeInfoDb::seqlevels(SummarizedExperiment::rowRanges(vars))) <- "UCSC"
   }
-
 
   # process each sample
   samples <- colnames(vars)
