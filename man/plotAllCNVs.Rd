@@ -4,10 +4,12 @@
 \alias{plotAllCNVs}
 \title{plotAllCNVs}
 \usage{
-plotAllCNVs(cnvs.gr)
+plotAllCNVs(cnvs.gr, genome = "hg19")
 }
 \arguments{
 \item{cnvs.gr}{\code{GRanges} containing al CNV definitions returned by \code{filterCNVs} or \code{loadCNVcalls} functions.}
+
+\item{genome}{The name of the genome. (Defaults to "hg19")}
 }
 \value{
 invisibly returns a \code{karyoplot} object
