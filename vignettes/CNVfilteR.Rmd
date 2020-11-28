@@ -57,9 +57,7 @@ to use `r BiocStyle::Biocpkg("BiocManager")`.
 ```
 
 
-We can also install the package from github to get the latest **devel version**,
-but beware that it **might be incompatible with the release version of 
-Bioconductor**.
+We can also install the package from github to get the latest **devel version**.
 
 ```` {r, eval = FALSE}
   BiocManager::install("jpuntomarcos/CNVfilteR")
@@ -430,7 +428,7 @@ variants within chr1:1000-1100 and chr1:1900-2000 will be ignored.
 We can plot easily a certain CNV and the variants in it. For example,  the 
 duplication CNV with `cnv.id`=17 can be plotted as follows:
 ```{r, fig.wide=TRUE}
-plotVariantsForCNV(results, "17")
+plotVariantsForCNV(results, "16")
 ```
 
 Some parameters can be customized, like `points.cex` and `points.pch`. It is 
