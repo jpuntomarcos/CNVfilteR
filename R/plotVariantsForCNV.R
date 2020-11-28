@@ -10,6 +10,8 @@
 #' @param legend.x.pos Legend x position. (Defaults to 0.08)
 #' @param legend.y.pos Legend y position. (Defaults to 0.25)
 #' @param legend.cex Legend cex. (Defaults to 0.8)
+#' @param legend.text.width Legend text width (Defaults to NULL)
+#' @param legend.show Whether to show the legend (Defaults to TRUE)
 #' @param karyotype.cex karyotype cex: affects top title and chromosome text (at bottom). (Defaults to 1)
 #' @param cnv.label.cex "CNV" text cex. (Defaults to 1)
 #' @param x.axis.bases.cex X-axis bases position cex. (Defaults to 0.7)
@@ -51,6 +53,7 @@
 plotVariantsForCNV <- function(cnvfilter.results, cnv.id,
                                points.cex = 1, points.pch = 19,
                                legend.x.pos = 0.08, legend.y.pos = 0.25, legend.cex = 0.8,
+                               legend.text.width = NULL, legend.show = TRUE,
                                karyotype.cex = 1, cnv.label.cex = 1,
                                x.axis.bases.cex = 0.7, x.axis.bases.digits = 5,
                                y.axis.title.cex = 0.8, y.axis.label.cex = 0.8,
@@ -62,6 +65,8 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id,
   assertthat::assert_that(assertthat::is.number(points.cex))
   assertthat::assert_that(assertthat::is.number(points.pch))
   assertthat::assert_that(is.logical(cnv.zoom.margin))
+  assertthat::assert_that(is.null(legend.text.width) || is.numeric(legend.text.width))
+  assertthat::assert_that(is.logical(legend.show))
 
   # Get filter params values for later use
   params <- cnvfilter.results$filterParameters
@@ -127,12 +132,14 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id,
 
 
   # Draw legend
-  graphics::legend(x=legend.x.pos, y=legend.y.pos, legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
-        pch = c(points.pch, points.pch, points.pch, NA, NA), pt.cex=1, bg = "white",  box.col = "gray",
-        col = c(DISCARD_COLOR, CONFIRM_COLOR, NEUTRAL_COLOR, NA, NA),
-        border = "white", cex = legend.cex,
-        fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2,
-        bty="l")
+  if (legend.show){
+    graphics::legend(x=legend.x.pos, y=legend.y.pos, legend=c("Discard CNV", "Confirm CNV", "Neutral", "CNV deletion", "CNV duplication"),
+          pch = c(points.pch, points.pch, points.pch, NA, NA), pt.cex=1, bg = "white",  box.col = "gray",
+          col = c(DISCARD_COLOR, CONFIRM_COLOR, NEUTRAL_COLOR, NA, NA),
+          border = "white", cex = legend.cex, text.width = legend.text.width,
+          fill = c(NA, NA, NA, CNV_COLORS[2], CNV_COLORS[4]), ncol=2,
+          bty="l")
+  }
 
   # Load variants for desired cnv
   vars <- cnvfilter.results$variantsForEachCNV[[cnv.id]]

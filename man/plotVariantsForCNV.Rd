@@ -12,6 +12,8 @@ plotVariantsForCNV(
   legend.x.pos = 0.08,
   legend.y.pos = 0.25,
   legend.cex = 0.8,
+  legend.text.width = NULL,
+  legend.show = TRUE,
   karyotype.cex = 1,
   cnv.label.cex = 1,
   x.axis.bases.cex = 0.7,
@@ -35,6 +37,10 @@ plotVariantsForCNV(
 \item{legend.y.pos}{Legend y position. (Defaults to 0.25)}
 
 \item{legend.cex}{Legend cex. (Defaults to 0.8)}
+
+\item{legend.text.width}{Legend text width (Defaults to NULL)}
+
+\item{legend.show}{Whether to show the legend (Defaults to TRUE)}
 
 \item{karyotype.cex}{karyotype cex: affects top title and chromosome text (at bottom). (Defaults to 1)}
 
