@@ -39,7 +39,7 @@ Imports:
 Suggests: 
   knitr,
   BSgenome.Hsapiens.UCSC.hg19,
-  BSgenome.Hsapiens.UCSC.hg19.masked
+  BSgenome.Hsapiens.UCSC.hg19.masked,
   rmarkdown
 biocViews: CopyNumberVariation, Sequencing, DNASeq, Visualization, DataImport
 VignetteBuilder: knitr
