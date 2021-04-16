@@ -1,3 +1,21 @@
+Changes in version 1.4.2
+-------------------------
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o loadCNVcalls() does not check cnvs.file names by default when loading (read.csv()) the cnvs.file
+    o loadCNVcalls() allows optional check.names.cnvs.file parameter
+    o Vignette updated
+
+
+MINOR
+
+    o Added rmarkdown to Suggets in DESCRIPTION file
+
+
+
+
 Changes in version 1.4.1
 -------------------------
 
