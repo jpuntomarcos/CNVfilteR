@@ -20,7 +20,8 @@ loadCNVcalls(
   sep = "\\t",
   skip = 0,
   genome = "hg19",
-  exclude.non.canonical.chrs = TRUE
+  exclude.non.canonical.chrs = TRUE,
+  check.names.cnvs.file = FALSE
 )
 }
 \arguments{
@@ -39,7 +40,7 @@ loadCNVcalls(
 
 \item{sample.column}{Which column stores the sample name.}
 
-\item{sample.name}{Sample name for all CNVs defined in \code{cnv.file}. If set, \code{sample.column} is ignored (Defaults to NULL)}
+\item{sample.name}{Sample name for all CNVs defined in \code{cnvs.file}. If set, \code{sample.column} is ignored (Defaults to NULL)}
 
 \item{gene.column}{Which columns store the gene or genes affected (optional). (Defaults to NULL)}
 
@@ -56,6 +57,8 @@ loadCNVcalls(
 \item{genome}{The name of the genome. (Defaults to "hg19")}
 
 \item{exclude.non.canonical.chrs}{Whether to exclude non canonical chromosomes (Defaults to TRUE)}
+
+\item{check.names.cnvs.file}{Whether to check \code{cnvs.file} names or not (Defaults to FALSE).  If TRUE then column names in the \code{cnvs.file} are checked to ensure that they are syntactically valid variable names. If necessary they are adjusted (by make.names) so that they are, and also to ensure that there are no duplicates}
 }
 \value{
 A \code{GRanges} with a range per each CNV and the metadata columns:
