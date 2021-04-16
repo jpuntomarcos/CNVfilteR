@@ -27,7 +27,7 @@ Many tools for germline copy number variant (CNV) detection from
 NGS data have been developed. Usually, these tools were designed
 for different input data like WGS, WES or
 panel data, and their performance may depend on the CNV size. Available
-benchmarks show that all these tools obtain false positives, sometimes 
+benchmarks show that all these tools produce false positives, sometimes 
 reaching a very high number of them.
 
 With the aim of reducing the number of false positives,
@@ -226,19 +226,20 @@ vcfs3 <- loadVCFs(vcf.file3, cnvs.gr = cnvs.gr, vcf.source = "MyCaller", list.su
 
 ## VCF free of artifacts
 
-As VCF will be used for determining if a CNV can be filtered out, **we
-recommend to use a VCF file free of false-positive SNVs** (as possible)
-to improve the accuracy when identifying those CNVs. The aim is to discard the
-SNVs that are probably false-positives and also those which allele 
-frequency is no reliable.
+CNVfilteR uses SNVs to identify false-positive CNV calls. Therefore, its 
+performance depends on the SNV calls quality. **We recommend using VCF files 
+free of false-positive SNVs** (as possible) to improve CNVfilteR accuracy.
+Some considerations can be followed in order to provide reliable SNVs to 
+CNVfilteR.
+
+  
 
 ### Minimun total depth
 
-`loadVCFs` will load only variants with a **minimum total depth** equal or 
-greater than `min.total.depth`. The default value, 10, showed good performance
-on our CNVfilteR evaluation on 3 WGS samples (data will be available soon) 
-and using Strelka2 as SNV variant caller. This value **should be
-adapted to your variant calling tool and sequencing depth conditions**. For 
+Use the `min.total.depth` parameter to discard SNVs with low depth coverage in
+the `loadVCFs` function.  The default
+value is 10, which may be appropriate in many WGS samples, but
+**this value should be adapted to your experiment conditions**. For 
 example, we used a `min.total.depth`
 of 30 when using CNVfilteR on panel (targeted-enrinched) samples with high 
 coverage and VarScan2 as SNV caller.
@@ -246,7 +247,9 @@ coverage and VarScan2 as SNV caller.
 
 ### Regions to exclude
 
-Additionally, we can exclude
+Low complexity and repetitive regions are genome areas where SNV callers 
+(also CNV callers) perform poorly. If possible, ignore these regions when using
+CNVfilteR. We can exclude
 those complex regions that have already known alignement artifacts 
 with the parameter `regions.to.exclude`. 
 In this example, we exclude PMS2, PRSS1, and
@@ -255,6 +258,7 @@ FANCD2 genes because they are pseudogenes with alignments artifacts:
 regions.to.exclude <- GRanges(seqnames = c("chr3","chr7", "chr7"), ranges = IRanges(c(10068098, 6012870, 142457319), c(10143614, 6048756, 142460923)))
 vcfs4 <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr, regions.to.exclude = regions.to.exclude)
 ```
+
 
 ### INDELs excluded by default
 
@@ -307,6 +311,8 @@ different strategies for identifying those CNVs:
  heterozygous variants falling in that CNV. Default `dup.threshold.score` value
  is 0.5. How the score is computed for each variant is explained in 
  the next section.
+
+
 
 
 ## Scoring model for duplication CNVs 
@@ -408,18 +414,22 @@ plotScoringModel(expected.ht.mean = p$expected.ht.mean,
 ```
 
 ## The margin.pct parameter
-The idea under this parameter is to ignore the variants placed in the "margins"
-of the CNV given that WGS CNV callers make unaccurate calls: they work on 
-windows sizes that may not correspond with the real CNV size. In consequence, we 
-prefer to exlude SNVs falling in the margins to avoid potential "noise" (SNVs
-out of the real CNV). In our evaluation on the HuRef WGS sample, we observed that
-values between 10 (default value) and 20 performed the best (data available soon).
+
+Many CNV callers produce inaccurate CNV calls. These inaccurate CNV calls are 
+more likely to be true (to overlap the real CNV) in the middle of the CNV than 
+in the extremes. So, the `margin.pct` parameter defines the percentage of CNV 
+(from each CNV limit) where SNVs will be ignored. By default, only 10% of SNVs 
+from each CNV extreme will be ignored. This `margin.pct` parameter can be 
+modified to better adapt it to your CNV caller. For example, we observed that 
+DECoN produced very accurate CNV calls in our genes panel dataset, so 
+`margin.pct` value was updated to 0 in this context.
 
 Summarizing, variants in the CNV call but close to the ends of the CNV call will
 be ignored. `margin.pct` defines the percentage of CNV length, located at 
 each CNV limit, where variants will be ignored. For example, for a CNV 
 chr1:1000-2000 and a `margin.pct` value of 10,
 variants within chr1:1000-1100 and chr1:1900-2000 will be ignored.
+
 
 
 
