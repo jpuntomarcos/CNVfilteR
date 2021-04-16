@@ -40,6 +40,7 @@ Suggests:
   knitr,
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg19.masked
+  rmarkdown
 biocViews: CopyNumberVariation, Sequencing, DNASeq, Visualization, DataImport
 VignetteBuilder: knitr
 BugReports: https://github.com/jpuntomarcos/CNVfilteR/issues
