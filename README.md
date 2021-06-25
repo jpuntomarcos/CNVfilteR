@@ -30,3 +30,13 @@ provided by the R/Bioconductor packages
 
 Documentation ([vignette](http://bioconductor.org/packages/devel/bioc/vignettes/CNVfilteR/inst/doc/CNVfilteR.html) and [user manual](http://bioconductor.org/packages/devel/bioc/manuals/CNVfilteR/man/CNVfilteR.pdf)) are available at the [CNVfilteR](http://bioconductor.org/packages/CNVfilteR) 
 Bioconductor site, allow with instructions to install it.
+
+
+## Citation
+
+CNVfilteR was developed by José Marcos Moreno-Cabrera and Bernat Gel. For citations,
+please refer to the [Bioinformatics paper](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btab356/6275259): 
+
+José Marcos Moreno-Cabrera, Jesús del Valle, Elisabeth Castellanos, Lidia Feliubadaló, Marta Pineda, Eduard Serra, Gabriel Capellá, Conxi Lázaro, Bernat Gel, *CNVfilteR: an R/Bioconductor package to identify false positives produced by germline NGS CNV detection tools*, Bioinformatics, 2021;, btab356, [https://doi.org/10.1093/bioinformatics/btab356](https://doi.org/10.1093/bioinformatics/btab356)
+
+
