@@ -77,7 +77,7 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
   msg <- ""
   if (!vcf.source %in% supported.tools){
     if ( (is.null(ref.support.field) | is.null(alt.support.field)) & (is.null(list.support.field)) )  {
-      stop(paste("VCF source was not recognized, and ref.support.field/alt.support.field/list.support.field were not provided. Expected options are:", utils::str(supported.tools)))
+      stop(paste("VCF source was not recognized, and ref.support.field/alt.support.field/list.support.field were not provided. Expected options are:", paste(supported.tools, collapse = " ")))
     } else {
       if (!is.null(list.support.field)) {
         msg <- paste("VCF source", vcf.source ,"is not supported, but list.support.field was provided. ")
