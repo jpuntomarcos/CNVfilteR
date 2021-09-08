@@ -1,3 +1,16 @@
+Changes in version 1.6.2
+-------------------------
+
+BUG FIXES
+
+    o Fixed: parsing some VCFs produced an unexpected error
+
+MINOR
+
+    o Minor bug fixed: stop message was not completely shown on loadSNPsFromVCF()
+
+
+
 Changes in version 1.6.1
 -------------------------
 
