@@ -205,8 +205,8 @@ loadSNPsFromVCF <- function(vcf.file, vcf.source = NULL, ref.support.field = NUL
       }
 
     } else {
-      depths.alt <- VariantAnnotation::geno(v)[[alt.support.field]]
-      depths.ref <- VariantAnnotation::geno(v)[[ref.support.field]]
+      depths.alt <- unlist(VariantAnnotation::geno(v)[[alt.support.field]])
+      depths.ref <- unlist(VariantAnnotation::geno(v)[[ref.support.field]])
     }
 
     # calculate allelic freq
