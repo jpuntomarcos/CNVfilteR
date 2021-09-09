@@ -1,3 +1,13 @@
+Changes in version 1.7.3
+-------------------------
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o CNVfilteR specfically supports VCFs produced by Torrent Variant Caller
+
+
+
 Changes in version 1.7.2
 -------------------------
 
@@ -17,6 +27,7 @@ Changes in version 1.7.1
 MINOR
 
     o CITATION udpated
+
 
 
 Changes in version 1.5.2
