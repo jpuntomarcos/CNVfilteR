@@ -36,9 +36,9 @@ be discarded. This task is performed by using the germline
 single nucleotide variant (SNV) calls that are usually obtained in 
 common NGS pipelines. As VCF field interpretation is key when working
 with these files, `r BiocStyle::Biocpkg("CNVfilteR")` specifically supports 
-VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller (GATK),
-and UnifiedGenotyper (GATK). Additionally, results can be plotted using the 
-functions provided by the R/Bioconductor packages
+VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller (GATK), 
+UnifiedGenotyper (GATK) and Torrent Variant Caller. Additionally, results can be
+plotted using the functions provided by the R/Bioconductor packages
 [karyoploteR](http://bioconductor.org/packages/karyoploteR/) and 
 [CopyNumberPlots](http://bioconductor.org/packages/CopyNumberPlots/).
 
@@ -199,7 +199,7 @@ challenging due to the flexibility provided by the VCF format definition.
 It is not straightforward to interpret correctly the fields in the VCF file 
 and compute the allele frequency. `loadVCFs()` interprets automatically 
 VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller (GATK),
-and UnifiedGenotyper (GATK).
+UnifiedGenotyper (GATK) and Torrent Variant Caller.
 
 In the following example the function recognizes VarScan2 as the source.
 ```{r }

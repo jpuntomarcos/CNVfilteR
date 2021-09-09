@@ -17,9 +17,9 @@ germline CNVs that can be discarded. This task is performed by using the
 germline single nucleotide variant (SNV) calls that are usually 
 obtained in common NGS pipelines. As VCF field interpretation is key 
 when working with these files, CNVfilteR specifically supports 
-VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller, and
-UnifiedGenotyper. Additionally, results can be plotted using the functions
-provided by the R/Bioconductor packages
+VCFs produced by VarScan2, Strelka/Strelka2, freeBayes, HaplotypeCaller, 
+UnifiedGenotyper and Torrent Variant Caller. Additionally, results can be 
+plotted using the functions provided by the R/Bioconductor packages
 [karyoploteR](http://bioconductor.org/packages/karyoploteR/) and 
 [CopyNumberPlots](http://bioconductor.org/packages/CopyNumberPlots/).
 
