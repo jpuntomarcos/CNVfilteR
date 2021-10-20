@@ -50,7 +50,7 @@ Loads SNPs (SNVs/indels) from a VCF file
 \details{
 Given a VCF file path, the function recognizes the variant caller source to decide which fields should be used to calculate
 ref/alt support and allelic frequency (see \code{return}). Current supported variant callers are VarScan2, Strelka/Strelka2, freebayes,
-HaplotypeCaller and UnifiedGenotyper.
+HaplotypeCaller, UnifiedGenotyper and Torrent Variant Caller.
 
 Optionally, the fields where the data is stored can be manually set by using the parameters \code{ref.support.field},
 \code{alt.support.field} and \code{list.support.field}
