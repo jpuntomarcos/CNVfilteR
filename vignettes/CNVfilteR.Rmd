@@ -59,7 +59,7 @@ to use `r BiocStyle::Biocpkg("BiocManager")`.
 
 We can also install the package from github to get the latest **devel version**.
 
-```` {r, eval = FALSE}
+``` {r, eval = FALSE}
   BiocManager::install("jpuntomarcos/CNVfilteR")
 ```
 
