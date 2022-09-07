@@ -101,7 +101,7 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
     if (!endsWith(vcfFile, ".gz"))
       vcfFile <- paste0(vcfFile, ".gz")
 
-    # create .gz or .tbi if necessary
+    # create .gz or .tbi if necessary (in temp dir)
     tbiFile <- paste0(vcfFile, ".tbi")
     if (!file.exists(vcfFile) | !file.exists(tbiFile)) {
 
@@ -110,15 +110,12 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
       file.copy(originalVcfFile, file.path(tempFolder, basename(originalVcfFile)))
       vcfFile <- file.path(tempFolder, basename(vcfFile))
 
-      # compress if necessary
-      if (!file.exists(vcfFile)){
-        Rsamtools::bgzip(originalVcfFile, vcfFile, overwrite = TRUE)  # generate .gz in a temp path
-      }
+      # compress
+      Rsamtools::bgzip(originalVcfFile, vcfFile, overwrite = TRUE)  # generate .gz in a temp path
 
-      # create tabix file if necessary
+      # create tabix file
       tbiFile <- paste0(vcfFile, ".tbi")
-      if (!file.exists(tbiFile))
-        idx <- Rsamtools::indexTabix(vcfFile, "vcf")
+      Rsamtools::indexTabix(vcfFile, "vcf")
     }
 
     # Read data
@@ -130,7 +127,7 @@ loadVCFs <- function(vcf.files, sample.names = NULL, cnvs.gr,
     samplesFoundInVCF <- names(variantsList)
     nSamples <- length(samplesFoundInVCF)
     if (nSamples > 1 & sample.names.mode == "oneSamplePerVCF"){
-      stop(paste("More than one sample was found in", vcfFile, "Please, use sample.names parameter only when working with VCF files with one sample column."))
+      stop("More than one sample was found in", vcfFile, "Please, use sample.names parameter only when working with VCF files with one sample column.")
     }
 
     # process variants depending on mode
