@@ -1,3 +1,12 @@
+Changes in version 1.10.1
+-------------------------
+
+BUG FIXES
+
+    o Minor bug fixed: now loadVCFs() properly overwrites vcf and generates tabix files if temp dir is used. It prevents an unlikely but unwanted situation: when, in a same R session, a user updates VCF content without renaming it. In this case, file already existed and the new VCF/GZ file was not being used by CNVfilteR.
+
+
+
 Changes in version 1.7.4
 -------------------------
 
@@ -5,7 +14,7 @@ Changes in version 1.7.4
 MINOR
 
     o Minor fix: removed ` from Vignette
-    
+
 
 
 Changes in version 1.7.3
