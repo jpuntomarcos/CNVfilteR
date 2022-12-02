@@ -284,6 +284,14 @@ also generates it. All files are generated in a temporary folder.
 See `loadVCFs()` documentation to see other parameters info.
 
 
+## Limitations
+
+Currlently CNVfilteR does not support mutiallelic sites in VCF files, 
+such as `chr3 193372598 .;. TTA T,TTT`. As an easy work around,
+mutiallelic sites can be split by using
+[bcftools](https://samtools.github.io/bcftools/): 
+`bcftools norm -N -m -both yourSample.vcf > splitSample.vcf`
+
 
 # Identifying false positives
 
