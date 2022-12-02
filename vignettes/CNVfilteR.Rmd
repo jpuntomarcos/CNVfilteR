@@ -82,7 +82,7 @@ Then, we load the SNVs stored in a couple of VCF files.
 ```{r }
 vcf.files <- c(system.file("extdata", "variants.sample1.vcf.gz", package = "CNVfilteR", mustWork = TRUE),
                system.file("extdata", "variants.sample2.vcf.gz", package = "CNVfilteR", mustWork = TRUE))
-vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr)
+vcfs <- loadVCFs(vcf.files, cnvs.gr = cnvs.gr, genome = "hg19")
 ```
 We observe that the function recognized VarScan2 as the source, so fields
 were selected and allele frequency consequently. Now we can call 
