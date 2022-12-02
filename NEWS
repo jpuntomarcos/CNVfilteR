@@ -1,3 +1,14 @@
+Changes in version 1.13.1
+-------------------------
+
+
+MINOR
+
+    o Vignette: genome is explicitly shown as an option in loadVCFs()
+    o Vignette: mutiallelic sites are not currently supported and bcftools can be used as workaround
+
+
+
 Changes in version 1.11.1
 -------------------------
 
