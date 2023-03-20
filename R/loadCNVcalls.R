@@ -109,6 +109,9 @@ loadCNVcalls <- function(cnvs.file, chr.column, start.column, end.column,
     cnvs.df$sample <- sample.name
   }
 
+  # Force sample to be character: it will avoid problems when in future steps
+  cnvs.df$sample <- as.character(cnvs.df$sample)
+
   # Assert CNV type values are correct
   cnvValuesCheck <- unique(cnvs.df$cnv) %in%  c(deletion, duplication)
   if(!identical(unique(cnvValuesCheck), TRUE)) {
