@@ -1,3 +1,13 @@
+Changes in version 1.12.2
+-------------------------
+
+
+MINOR
+
+    o Bug fixed: sample name column in CNV calling file is always interpreted as character, which prevents later errors.
+
+
+
 Changes in version 1.12.1
 -------------------------
 
