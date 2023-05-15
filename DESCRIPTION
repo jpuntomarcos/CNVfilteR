@@ -38,6 +38,7 @@ Imports:
   methods
 Suggests: 
   knitr,
+  BiocStyle,
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg19.masked,
   rmarkdown
