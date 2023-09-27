@@ -108,7 +108,7 @@ plotVariantsForCNV <- function(cnvfilter.results, cnv.id,
   karyoploteR::kpAddBaseNumbers(kp, tick.dist = GenomicRanges::width(cnv) / 5.0,
                                 cex = x.axis.bases.cex, digits = x.axis.bases.digits,
                                 add.units = TRUE)
-  CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0,
+  CopyNumberPlots::plotCopyNumberCalls(kp, cnv, cn.colors = CNV_COLORS, r0=0, loh.values = FALSE,
                                        label.cex = cnv.label.cex,
                                        r1=0.03, labels = "CNV")
   karyoploteR::kpAddLabels(kp, r0 = r0, r1 = r1, labels = c("variant allele frequency"),

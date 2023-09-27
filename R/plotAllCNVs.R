@@ -36,7 +36,7 @@ plotAllCNVs <- function(cnvs.gr, genome = "hg19"){
 
   # Plot
   kp <- karyoploteR::plotKaryotype(plot.type=1, genome = genome)
-  CopyNumberPlots::plotCopyNumberCalls(kp, cnvs.gr, r1=0.3, cn.colors = CNV_COLORS, label.cex = 0.6)
+  CopyNumberPlots::plotCopyNumberCalls(kp, cnvs.gr, r1=0.3, cn.colors = CNV_COLORS, label.cex = 0.6, loh.values = FALSE)
   graphics::legend("bottomright", legend=c("Deletion CNV", "Duplication CNV"), fill = c(CNV_COLORS[2], CNV_COLORS[4]), ncol=1, cex = 0.7)
 
   return(invisible(kp))

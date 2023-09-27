@@ -1,3 +1,13 @@
+Changes in version 1.15.2
+-------------------------
+
+
+MINOR
+
+    o Fixed bug: CopyNumberPlots requires additional parameter
+
+
+
 Changes in version 1.13.2
 -------------------------
 
